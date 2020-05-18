@@ -1,0 +1,326 @@
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="card card-plain">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Thống kê</h4>
+                <p class="card-category">+ Tổng số phép năm trong kì: <b class="total_leave"></b></p>
+                <p class="card-category">+ Tổng số ngày phép năm đã sử dụng: <b>2</b></p>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Tổng quỹ phép năm trong kỳ</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <?php
+                                    $from = date_create($this->leave_time['from']); //->format('m-Y');
+                                    $to = date_create($this->leave_time['to']); //->format('m-Y');
+                                    $day_current = $from;
+                                    while ($day_current < $to) {
+                                        echo "<th>Tháng " . $day_current->format('m/Y') . "</th>";
+                                        $time = strtotime($day_current->format('Y-m-d'));
+                                        $final = date("Y-m-d", strtotime("+1 month", $time));
+                                        $day_current = date_create($final);
+                                    }
+                                    ?>
+                                <th>
+                                    Phép thâm niên
+                                </th>
+                                <th>
+                                    Tổng cộng
+                                </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <?php if(isset($this->staff_contract) && !empty($this->staff_contract)){
+                                            $total_leave_contract = 0 ;
+                                            $year = date_create($this->staff_contract['from'])->format('Y');                                    
+                                            if($year < date('Y')){
+                                                $day_current = $from;
+                                                while ($day_current < $to) {
+                                                    if($day_current->format('m') <= date('m')){
+                                                        echo "<td>1</td>";
+                                                        $total_leave_contract++;
+                                                    }else echo "<td>0</td>";
+                                                    
+                                                    $time = strtotime($day_current->format('Y-m-d'));
+                                                    $final = date("Y-m-d", strtotime("+1 month", $time));
+                                                    $day_current = date_create($final);
+                                                }
+                                            } else if ($year == date('Y')) {
+                                                $month = date_create($this->staff_contract['from'])->format('m');
+                                                $day = date_create($this->staff_contract['from'])->format('d');
+
+                                                $day_current = $from;
+                                                while ($day_current < $to) {
+                                                    if($month <= $day_current->format('m') && $day_current->format('m') <= date('m')){
+                                                        if($day < 15 && $month==$day_current->format('m')){
+                                                            echo "<td>1</td>";
+                                                            $total_leave_contract++;
+                                                        } else if ($day >= 15 && $month == $day_current->format('m')) {
+                                                            echo "<td>0</td>";
+                                                        } else if ($month <= $day_current->format('m')) {
+                                                            echo "<td>1</td>";
+                                                            $total_leave_contract++;
+                                                    }
+                                                    }else echo "<td>0</td>";
+                                                    $time = strtotime($day_current->format('Y-m-d'));
+                                                    $final = date("Y-m-d", strtotime("+1 month", $time));
+                                                    $day_current = date_create($final);
+                                                }
+                                            }
+                                        }else {
+                                                $month = date_create($this->staff_contract['from'])->format('m');
+                                                $day = date_create($this->staff_contract['from'])->format('d');
+
+                                                $day_current = $from;
+                                                while ($day_current < $to) {
+                                                    echo "<td>0</td>";
+                                                    $time = strtotime($day_current->format('Y-m-d'));
+                                                    $final = date("Y-m-d", strtotime("+1 month", $time));
+                                                    $day_current = date_create($final);
+                                            }
+                                        }?>
+                                        <td>
+                                            <?php if(isset($this->staff_contract_last) && !empty($this->staff_contract_last)){
+                                                if((date('Y') - date_create($this->staff_contract_last['from'])->format('Y')) >= 5){
+                                                    echo "1";
+                                                    $total_leave_contract++;
+                                                }else echo "0";
+                                            }else echo '0'?>
+                                        </td>
+                                        <td>
+                                            <?php echo (isset($total_leave_contract))?$total_leave_contract:0;?>
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Phép năm đã sử dụng theo tháng</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <?php
+                                    $from = date_create($this->leave_time['from']); //->format('m-Y');
+                                    $to = date_create($this->leave_time['to']); //->format('m-Y');
+                                    $day_current = $from;
+                                    while ($day_current < $to) {
+                                        echo "<th>Tháng " . $day_current->format('m/Y') . "</th>";
+                                        $time = strtotime($day_current->format('Y-m-d'));
+                                        $final = date("Y-m-d", strtotime("+1 month", $time));
+                                        $day_current = date_create($final);
+                                    }
+                                    ?>
+                                <th>
+                                    Tổng cộng
+                                </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <?php
+                                        $from = date_create($this->leave_time['from']); //->format('m-Y');
+                                        $to = date_create($this->leave_time['to']); //->format('m-Y');
+                                        $day_current = $from;
+                                        while ($day_current < $to) {
+                                            echo "<td>" . ((isset($this->list_leave_mm[(int) $day_current->format('m')]) ? $this->list_leave_mm[(int) $day_current->format('m')] : 0) + $this->list_leave_mdm[(int) $day_current->format('m')]) . "</td>";
+                                            $time = strtotime($day_current->format('Y-m-d'));
+                                            $final = date("Y-m-d", strtotime("+1 month", $time));
+                                            $day_current = date_create($final);
+                                        }
+                                        ?>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Phép đã đăng ký & sử dụng</h4>
+                    </div>
+                    <br>
+                    <form class="form-inline" method="post">
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label class="bmd-label-floating">Month</label>
+                            <input type="text" class="form-control datepickermy" name="date" id="date" required="required" value="<?php echo (!empty($this->param['date']))?$this->param['date']:'';?>">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>
+                                    STT
+                                </th>
+                                <th>
+                                    Từ ngày
+                                </th>
+                                <th>
+                                    Đến ngày
+                                </th>
+                                <th>
+                                    Tổng số ngày
+                                </th>
+                                <th>
+                                    Nhóm phép
+                                </th>
+                                <th>
+                                    Loại phép
+                                </th>
+                                <th>
+                                    Lý do
+                                </th>
+                                <th>
+                                    Tình Trạng
+                                </th>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $inc = 1;
+                                    foreach ($this->list_my_leave as $item):
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $inc++ ?>
+                                            </td>
+                                            <td style="display: none"><input  class="id-leave-detail" value="<?php echo $item['id'] ?>" ></td>
+                                            <td>
+                                                <?php echo $item['from_date'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $item['to_date'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $item['count_day'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $item['group_type'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $item['leave_type'] ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $item['reason'] ?>
+                                            </td>
+                                            <td>
+
+                                                <?php if ($item['status_leave'] == 'APPROVED'): ?>
+                                                    <span class="label label-success">APPROVED</span>
+                                                <?php elseif ($item['status_leave'] == 'PEDDING'): ?>
+                                                    <span class="label label-warning">PEDDING</span>
+                                                <?php else: ?>
+                                                    <span class="label label-danger btn-hover btn-reject" data-toggle="tooltip" data-placement="top" title="Nhấp vào đây để xem chi tiết">REJECT</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-show-reject" class="modal-show1">
+            <div class="modal-content-show2 animate-show">
+                <div class="imgcontainer-close">
+                    <span onclick="document.getElementById('modal-show-reject').style.display = 'none'" class="close-show"
+                          title="Close Modal">&times;</span>
+                </div>
+
+                <div class="container-show">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" id="trang" href="javascript:;">Reason reject</a><br><span class="bold" style="color: gray;font-size: 15px" id="info_staff">1651120140 - Huynh Cong Trang</span>
+                    </div>
+                    <div class="card-body">
+                        <input id="id_leave2" name="id_leave2" class="hidden" value="">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Lý do từ chối</label>
+                                    <select class="form-control" id="reason-reject" name="reason-reject" required="required">
+                                    </select> 
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Reject by : </label>
+                                    <p  id="info_staff_reject">165 - Nguyễn vân A</p>
+                                    <p id="time_reject">Time : 12-02</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Decription : </label>
+                                    <textarea class="form-control" id="reson_leave" name="reason_leave" rows="5" placeholder="What's on your reason ?" required="required" readonly> </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        <?php if (isset($this->param['date'])): ?>
+    $(".datepickermy").datepicker("setDate", new Date('<?php echo $this->param['date'] ?>'))
+        <?php else: ?>
+    $(".datepickermy").datepicker("setDate", new Date())
+        <?php endif; ?>
+    $('.total_leave').text(<?php echo (isset($total_leave_contract))?$total_leave_contract:0 ?>);
+
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.btn-reject').click(function () {
+            document.getElementById('modal-show-reject').style.display = 'block';
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            console.log(id_leave);
+            $.ajax({
+                method: "POST",
+                url: "/my-leave/reject-detail",
+                data: {
+                    id_leave: id_leave
+                }
+            }).done(function (data) {
+                var data_main = jQuery.parseJSON(data);
+                console.log(data_main);
+                $('#info_staff').text(data_main.codea_staff + " - " + data_main.full_name_staff);
+                $('#reason-reject').append("<option>"+data_main.reason_reject+"</option>");
+                $("#info_staff_reject").text(data_main.code_reject + " - " + data_main.full_name_reject);
+                $("#time_reject").text(data_main.create_at);
+                $("#reson_leave").text(data_main.reason);
+            });
+        });
+    });
+</script>
+
+

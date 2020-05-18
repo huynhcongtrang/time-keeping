@@ -1,0 +1,328 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title">Create leave</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="create_leave">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Loại nghỉ (<span style="color: red">*</span>)</label>
+                                    <select class="form-control" required="required" name="type" id="type">
+                                        <option value="1" selected>Phép</option>
+                                        <option value="2">Nữa ngày</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"  id="type_fill">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Từ ngày (<span style="color: red">*</span>)</label>
+                                    <input type="text" class="form-control datepicker" name="from_date" id="from_date" required="required" value="01-01-2020">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Đến ngày (<span style="color: red">*</span>)</label>
+                                    <input type="text" class="form-control datepicker" name="to_date" id="to_date" required="required" value="01-01-2020">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="type_haft">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Ngày nghỉ (<span style="color: red">*</span>)</label>
+                                    <input type="text" class="form-control datepicker" name="date_off" id="date_off" value="01-01-2020">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Nhóm loại phép (<span style="color: red">*</span>)</label>
+                                    <select class="form-control" name="group_type" id="group_type" required="required">
+                                        <option value="">---</option>
+                                        <?php if (!empty($this->list_group_leave)): foreach ($this->list_group_leave as $item): ?>
+                                                <option value="<?php echo $item['id'] ?>"><?php echo $item['title'] ?></option>
+                                                <?php
+                                            endforeach;
+                                        endif;
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Loại phép (<span style="color: red">*</span>)</label>
+                                    <select class="form-control" name="leave_type" id="leave_type" required="required">
+                                        <option value="">---</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Lý do</label>
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="reson_leave" name="reson_leave" rows="5" placeholder="What's on your reason ?" required="required"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary pull-right"><span class="material-icons">add</span>Tạo phép</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Mô tả chi tiết</h4>
+                    <hr>
+                    <div>
+                        <b style="font-weight: bold">Số ngày nghỉ tối đa một lần :</b><span id="max_day_per_time"></span>
+                    </div>
+                    <hr>
+                    <div>
+                        <b style="font-weight: bold">Số ngày nghỉ tối đa một năm :</b><span id="max_day_per_year"></span>
+                    </div>
+                    <hr>
+                    <div>
+                        <b style="font-weight: bold">Thông tin phép</b>
+                        <p id="detail_leave">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function alert_error(title, msg) {
+        Swal.fire({
+            icon: 'error',
+            title: title,
+            text: msg
+        })
+    }
+    $(document).ready(function () {
+        $('#type_haft').hide();
+        $(".datepicker").datepicker("setDate", new Date())
+        $('#type').change(function () {
+            var type = $('#type').val();
+            if (type.length) {
+                if (type == 1) {// nghi phep
+                    $('#type_haft').hide();
+                    $('#type_fill').show();
+                    $('#from_date').attr('required', 'required');
+                    $('#to_date').attr('required', 'required');
+                    $('#date_off').removeAttr('required');
+                } else if (type == 2) {// nghi nua ngay
+                    $('#type_haft').show();
+                    $('#type_fill').hide();
+                    $('#from_date').removeAttr('required', 'required');
+                    $('#to_date').removeAttr('required', 'required');
+                    $('#date_off').attr('required');
+                }
+            }
+        });
+
+        $('#group_type').change(function () {
+            var group_type = $('#group_type').val();
+            if (group_type.length) {
+                $.ajax({
+                    method: "POST",
+                    url: "/my-leave/load-type-leave",
+                    data: {group_type: group_type}
+                }).done(function (data) {
+                    var obj = jQuery.parseJSON(data);
+                    $('#leave_type').empty();
+                    $('#leave_type').append("<option value=''>---</option>");
+                    $('#max_day_per_time').text('');
+                    $('#max_day_per_year').text('');
+                    $('#detail_leave').empty();
+                    $.each(obj, function (index, value) {
+                        $('#leave_type').append("<option value=" + value.id + ">" + value.title + "</option>");
+                    });
+                });
+            } else {
+                $('#leave_type').empty();
+                $('#leave_type').append("<option value=''>---</option>");
+                $('#max_day_per_time').text('');
+                $('#max_day_per_year').text('');
+                $('#detail_leave').empty();
+            }
+        });
+
+        $('#leave_type').change(function () {
+            var leave_type = $('#leave_type').val();
+            if (leave_type.length) {
+                $.ajax({
+                    method: "POST",
+                    url: "/my-leave/load-type-leave-id",
+                    data: {leave_type: leave_type}
+                }).done(function (data) {
+                    $('#detail_leave').empty();
+                    var obj = jQuery.parseJSON(data);
+                    if (obj.max_day_per_time == 0) {
+                        $('#max_day_per_time').text('Không giới hạn');
+                    } else
+                        $('#max_day_per_time').text(obj.max_day_per_time);
+                    if (obj.max_day_per_year == 0) {
+                        $('#max_day_per_year').text("Không giới hạn.");
+                    } else
+                        $('#max_day_per_year').text(obj.max_day_per_year);
+                    $('#detail_leave').append(obj.summary);
+                });
+            } else {
+                $('#max_day_per_time').text('');
+                $('#max_day_per_year').text('');
+                $('#detail_leave').empty();
+            }
+        });
+        $("#create_leave").submit(function (e) {
+            var type = $('#type').val();
+            var check = 0;
+            var date = $('#from_date').datepicker('getDate');
+            var year = date.getFullYear();
+            var yearcurent = new Date().getFullYear();
+            if (type == 1) {
+                if (year > yearcurent) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Chỉ được đăng kí phép cho năm hiện tại!',
+                    });
+                }
+                else if ($('#from_date').datepicker('getDate') <= (new Date()).setHours(0, 0, 0, 0)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ngày bắt đầu nghỉ phải lớn hơn ngày hiện tại!',
+                    });
+
+                } else if ($('#from_date').datepicker('getDate') > $('#to_date').datepicker('getDate')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ngày bắt đầu nghỉ không được lớn hơn ngày kết thúc!',
+                    });
+
+                } else {
+                    var from_date = $("#from_date").datepicker("option", "dateFormat", 'yy-mm-dd').val();
+                    var to_date = $("#to_date").datepicker("option", "dateFormat", 'yy-mm-dd').val();
+                    var leave_type = $('#leave_type').val();
+                    var note = $('#reson_leave').val();
+                    $.ajax({
+                        method: "POST",
+                        url: "/my-leave/check-from-to",
+                        data: {
+                            from_date: from_date,
+                            to_date: to_date,
+                            type: leave_type,
+                            note: note
+                        }
+                    }).done(function (data) {
+                        var obj = jQuery.parseJSON(data);
+                        console.log(obj);
+                        if (obj.status == 1) {
+                            if (typeof (obj.total_date_leave) != "undefined" && obj.total_date_leave !== null) {
+                                var string_date = '';
+                                $.each(obj.date_special.date, function (index, value) {
+                                    string_date += " ngày " + value.data + " , ";
+                                });
+                                var msg = "Hiện tại" + string_date + " là ngày nghỉ. Số ngày đăng kí phép " + obj.total_date_leave + " ngày. Nhưng đã vượt qua số ngày cho phép . Xin vui lòng kiểm tra lại.";
+                                alert_error('Oop...!', msg);
+                            } else {
+                                alert_error('Oop...!', "Số ngày đăng kí phép vượt quá số ngày cho 1 lần đăng kí !");
+                            }
+
+                        } else if (obj.status == 2) {
+                            if (typeof (obj.total_date_leave) != "undefined" && obj.total_date_leave !== null) {
+                                var string_date = '';
+                                $.each(obj.date_special.date, function (index, value) {
+
+                                    string_date += " ngày " + value.data + " , ";
+                                });
+                                var msg = "Hiện tại" + string_date + " là ngày nghỉ. Số ngày đăng kí phép " + obj.total_date_leave + " ngày. Nhưng đã vượt qua số ngày cho phép . Số ngày phép còn lại trong năm của bạn :" + obj.date_remain + ". Xin vui lòng kiểm tra lại.";
+                                alert_error('Oop...!', msg);
+
+                            } else {
+                                var msg = "Số ngày đăng kí phép vượt quá số ngày phép trong năm. Số ngày phép còn lại trong năm :  " + obj.date_remain + " !";
+                                alert_error('Oop...!', msg);
+                            }
+
+                        } else if (obj.status == 3) {
+                            alert_error('Oop...!', "Bạn đăng kí trùng với ngày nghỉ rồi. Xin vui lòng kiểm tra lại !");
+
+                        }else if(obj.status == 10){
+                            alert_error('Oop...!', "Bạn chưa có hợp đồng nên không thể đăng kí phép năm =!");
+                        }else if(obj.status == 5){
+                            alert_error('Oop...!', "Bạn đã đăng kí ngày này rồi !");
+                        } else {
+                            Swal.fire({
+                                title: 'Thành công?',
+                                text: "Bạn đã đăng kí phép thành công !",
+                                icon: 'success'
+                            }).then((result) => {
+                                location.reload();
+                            })
+                        }
+                    });
+                }
+            } else if (type == 2) {
+                if ($('#date_off').datepicker('getDate') <= (new Date()).setHours(0, 0, 0, 0)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Ngày nghỉ phải lớn hơn ngày hiện tại!',
+                    });
+
+                } else {
+                    var date_off = $("#date_off").datepicker("option", "dateFormat", 'yy-mm-dd').val();
+                    var leave_type = $('#leave_type').val();
+                    var note = $('#reson_leave').val();
+                    $.ajax({
+                        method: "POST",
+                        url: "/my-leave/check-date-off",
+                        data: {
+                            date_off: date_off,
+                            type: leave_type,
+                            note: note
+                        }
+                    }).done(function (data) {
+                        console.log(data);
+                        if (data == 1 || data == 2) {
+                            alert_error('Oop...!', "Bạn đăng kí trùng với ngày nghỉ rồi. Xin vui lòng kiểm tra lại !");
+                        } else if (data == 3) {
+                            alert_error('Oop...!', "Bạn đã đăng kí vượt quá số ngày cho phép !");
+                        } else if (data == 4) {
+                            alert_error('Oop...!', "Đăng kí không thành công. Hiện tại bạn đã hết ngày phép !");
+                        }else if(data == 10){
+                            alert_error('Oop...!', "Bạn chưa có hợp đồng nên không thể đăng kí phép năm =!");
+                        }else if(data == 5){
+                            alert_error('Oop...!', "Bạn đã đăng kí ngày này rồi !");
+                        } else {
+                            Swal.fire({
+                                title: 'Thành công?',
+                                text: "Bạn đã đăng kí phép thành công !",
+                                icon: 'success'
+                            }).then((result) => {
+                                location.reload();
+                            })
+                        }
+                    });
+                }
+            }
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,624 @@
+<style>
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_asc_disabled:after,
+    table.dataTable thead .sorting_asc_disabled:before,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting_desc:before,
+    table.dataTable thead .sorting_desc_disabled:after,
+    table.dataTable thead .sorting_desc_disabled:before {
+        bottom: .5em;
+    }
+    #list-leave_wrapper .row:first-child{
+        display:  none !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#list-leave').DataTable();
+    });
+</script>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="card-header card-header-primary tap-search">
+                    <h4 class="card-title mt-0">Search</h4>
+                </div>
+                <div class="card-body tap-search-body">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Name</label>
+                                    <input type="text" class="form-control" name="full_name" value="<?php echo (isset($this->param['full_name']) && !empty($this->param['full_name']))?$this->param['full_name']:''?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Email</label>
+                                    <input type="text" class="form-control" name="email" value="<?php echo (isset($this->param['email']) && !empty($this->param['email']))?$this->param['email']:''?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Code</label>
+                                    <input type="text" class="form-control" name="code" value="<?php echo (isset($this->param['code']) && !empty($this->param['code']))?$this->param['code']:''?>">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Department</label>
+                                    <select class="form-control" name="department" id="department" title="Department">
+                                        <option value="">---</option>
+                                        <?php if (isset($this->list_department) && !empty($this->list_department)): foreach ($this->list_department as $item): ?>
+                                        <option value="<?php echo $item['id'] ?>" <?php echo (isset($this->param['department']) && !empty($this->param['department']) && $this->param['department'] == $item['id'])?'selected':'';?>><?php echo $item['name'] ?></option>
+                                            <?php endforeach;
+                                        endif;
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Team</label>
+                                    <select class="form-control" name="team" id="team" title="team">
+                                        <option value="">---</option>
+                                        <?php if(isset($this->param['team']) && !empty($this->param['team'])):?>
+                                            <option value="<?php echo $this->param['team']?>" selected><?php echo $this->list_all_team_title[$this->param['team']]?></option>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Title</label>
+                                    <select class="form-control" id="title" name="title" title="title">
+                                        <option value="">---</option>
+                                        <?php if(isset($this->param['title']) && !empty($this->param['title'])):?>
+                                            <option value="<?php echo $this->param['title']?>" selected><?php echo $this->list_all_team_title[$this->param['title']]?></option>
+                                        <?php endif;?>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Month</label>
+                                    <input type="text" class="form-control datepickermy" name="date" id="date" required="required" value="<?php echo (isset($this->param['date']) && !empty($this->param['date']))?$this->param['date']:''?>">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search<div class="ripple-container"></div></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <h6>Xác nhận phép</h6>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="list-leave" class="table table-striped" cellspacing="0" width="100%">
+                            <thead class="">
+                            <th>
+                                STT
+                            </th>
+                            <th>
+                                Code
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Department
+                            </th>
+                            <th>
+                                Team
+                            </th>
+                            <th>
+                                Title
+                            </th>
+                            <th>
+                                From
+                            </th>
+                            <th>
+                                To
+                            </th>
+                            <th>
+                                Số ngày phép
+                            </th>
+                            <th>
+                                Nhóm phép
+                            </th>
+                            <th>
+                                Loại phép
+                            </th>
+                            <th>
+                                Lý do
+                            </th>
+                            <th>
+                                Leader approve
+                            </th>
+                            <th>
+                                Hr approve
+                            </th>
+                            <th>
+                                Trạng thái
+                            </th>
+<?php if ($this->info_user_team['department_id'] == DEPARTMENT_ADMIN): ?>
+                                <th>
+                                    Hành động
+                                </th>
+<?php endif; ?>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $inc = 1;
+                                if (isset($this->list_staff_leave) && !empty($this->list_staff_leave)):foreach ($this->list_staff_leave as $item):
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $inc++ ?></td>
+                                            <td style="display: none"><input  class="id-leave-detail" value="<?php echo $item['id'] ?>" ></td>
+                                            <td><?php echo $item['code'] ?></td>
+                                            <td><?php echo $item['full_name'] ?></td>
+                                            <td><?php echo $item['deparment'] ?></td>
+                                            <td><?php echo $item['team'] ?></td>
+                                            <td><?php echo $item['title'] ?></td>
+                                            <td><?php echo $item['from_date'] ?></td>
+                                            <td><?php echo $item['to_date'] ?></td>
+                                            <td><?php echo $item['count_day'] ?></td>
+                                            <td><?php echo $item['group_type'] ?></td>
+                                            <td><?php echo $item['leave_type'] ?></td>
+                                            <td><?php echo $item['reason'] ?></td>
+                                            <td>
+                                                <?php if (($this->info_user_team['is_leader'] == 1)): ?>
+            <?php if (empty($item['approve_by_leader'])): ?>
+                                                        <span class="material-icons btn-hover btn-approve-leader" style="color: green" title="Đồng ý">library_add_check</span>
+                                                        <span class="material-icons btn-hover btn-reject-leader" style="color: red" title="Không đồng ý">clear</span>
+            <?php else: ?>
+                                                        <span class="label label-success">Approved</span>
+                                                        <br>
+                                                        Bởi: <span class="bold"><?php echo $item['approve_by_leader'] ?></span>
+                                                        <br>
+                                                        <span><?php echo $item['approve_at_leader'] ?></span>
+                                                    <?php endif; ?>
+                                                <?php elseif ($this->info_user_team['department_id'] == DEPARTMENT_HR): ?>
+                                                    <?php if (empty($item['approve_by_leader'])): ?>
+                                                        <span class="label label-danger">NotYet</span>
+            <?php else: ?>
+                                                        <span class="label label-success">Approved</span>
+                                                        <br>
+                                                        Bởi: <span class="bold"><?php echo $item['approve_by_leader'] ?></span>
+                                                        <br>
+                                                        <span><?php echo $item['approve_at_leader'] ?></span>
+                                                    <?php endif; ?>
+                                                <?php elseif ($this->info_user_team['department_id'] == DEPARTMENT_ADMIN): ?>
+                                                    <?php if (empty($item['approve_by_leader'])): ?>
+                                                        <span class="label label-danger">NotYet</span>
+            <?php else: ?>
+                                                        <span class="label label-success">Approved</span>
+                                                        <br>
+                                                        Bởi: <span class="bold"><?php echo $item['approve_by_leader'] ?></span>
+                                                        <br>
+                                                        <span><?php echo $item['approve_at_leader'] ?></span>
+                                                    <?php endif; ?>
+        <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if ($this->info_user_team['department_id'] == DEPARTMENT_HR)://($this->info_user_team['is_leader'] == 1)?>
+            <?php if (empty($item['approve_by_hr'])): ?>
+                                                        <span class="material-icons btn-hover btn-approve-hr" style="color: green" title="Đồng ý">library_add_check</span>
+                                                        <span class="material-icons btn-hover btn-reject-hr" style="color: red" title="Không đồng ý">clear</span>
+            <?php else: ?>
+                                                        <span class="label label-success">Approved</span>
+                                                        <br>
+                                                        Bởi: <span class="bold"><?php echo $item['approve_by_hr'] ?></span>
+                                                        <br>
+                                                        <span><?php echo $item['approve_at_hr'] ?></span>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <?php if (empty($item['approve_by_hr'])): ?>
+                                                        <span class="label label-danger">NotYet</span>
+            <?php else: ?>
+                                                        <span class="label label-success">Approved</span>
+                                                        <br>
+                                                        Bởi: <span class="bold"><?php echo $item['approve_by_hr'] ?></span>
+                                                        <br>
+                                                        <span><?php echo $item['approve_at_hr'] ?></span>
+                                                    <?php endif; ?>
+        <?php endif; ?>
+                                            </td>
+                                            <td><span class="label label-warning"><?php echo $item['status'] ?></span></td>
+                                            <td>
+        <?php if ($this->info_user_team['department_id'] == DEPARTMENT_ADMIN): ?>
+                                                    <span class="material-icons btn-hover btn-approve-ad" style="color: green" title="Đồng ý">library_add_check</span>
+                                                    <span class="material-icons btn-hover btn-reject-hr" style="color: red" title="Không đồng ý">clear</span>
+        <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    endforeach;
+                                endif;
+                                ?>
+<!--<td>
+<span class="material-icons btn-hover" style="color: green" title="Đồng ý">library_add_check</span>
+<span class="material-icons btn-hover" style="color: red" title="Không đồng ý">clear</span>
+</td>-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <h6>Xác nhận công</h6>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="">
+                            <th>
+                                Code
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Team
+                            </th>
+                            <th>
+                                Title
+                            </th>
+                            <th>
+                                Những ngày cần xác nhận công
+                            </th>
+                            <th>
+                                Những ngày cần xác nhận đi trể/sớm
+                            </th>
+                            <th>
+                                Hành động
+                            </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        1
+                                    </td>
+                                    <td>
+                                        Huỳnh Công Trạng
+                                    </td>
+                                    <td>
+                                        Tech
+                                    </td>
+                                    <td>
+                                        PHP Dev
+                                    </td>
+                                    <td>
+                                        1,2,3,4,5
+                                    </td>
+                                    <td>
+                                        6,7,8,9
+                                    </td>
+                                    <td>
+                                        <span class="material-icons btn-hover" style="color: green" title="Đồng ý">library_add_check</span>
+                                        <span class="material-icons btn-hover" style="color: red" title="Không đồng ý">clear</span>
+                                        <span onclick="document.getElementById('modal-show').style.display = 'block'" class="material-icons btn-hover" style="color: gray" title="Chi tiết">visibility</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--form detail-->
+        <div id="modal-show" class="modal-show1">
+            <div class="modal-content-show animate-show">
+                <div class="imgcontainer-close">
+                    <span onclick="document.getElementById('modal-show').style.display = 'none'" class="close-show"
+                          title="Close Modal">&times;</span>
+                </div>
+
+                <div class="container-show">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" id="trang" href="javascript:;">List approve</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title ">Huỳnh Công Trạng - 2566621</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                    <th>
+                                        Ngày
+                                    </th>
+                                    <th>
+                                        Giờ vào
+                                    </th>
+                                    <th>
+                                        Giờ ra
+                                    </th>
+                                    <th>
+                                        Ngày công
+                                    </th>
+                                    <th>
+                                        Nội dung
+                                    </th>
+                                    <th>
+                                        Lý do
+                                    </th>
+                                    <th>
+                                        Hành động
+                                    </th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                01/04/2020
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                1 ngày công
+                                            </td>
+                                            <td>
+                                                Công tác ngoài
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                <span class="material-icons btn-hover" style="color: green" title="Đồng ý">library_add_check</span>
+                                                <span class="material-icons btn-hover" style="color: red" title="Không đồng ý">clear</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-show-reject" class="modal-show1">
+            <div class="modal-content-show2 animate-show">
+                <div class="imgcontainer-close">
+                    <span onclick="document.getElementById('modal-show-reject').style.display = 'none'" class="close-show"
+                          title="Close Modal">&times;</span>
+                </div>
+
+                <div class="container-show">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" id="trang" href="javascript:;">Reason reject</a>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/list-approve/reject">
+                            <input id="id_leave2" name="id_leave2" class="hidden" value="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">Lý do từ chối</label>
+                                        <select class="form-control" name="reason-reject" required="required">
+                                            <option value="">--</option>
+                                            <?php if (isset($this->list_reason_reject) && !empty($this->list_reason_reject)):foreach ($this->list_reason_reject as $item): ?>
+                                                    <option value="<?php echo $item['id'] ?>"><?php echo $item['reason_reject'] ?></option>
+                                                    <?php
+                                                endforeach;
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="reson_leave" name="reason_leave" rows="5" placeholder="What's on your reason ?" required="required"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+<?php if (isset($this->param['date'])): ?>
+            $(".datepickermy").datepicker("setDate", new Date('<?php echo $this->param['date'] ?>'));
+<?php else: ?>
+            $(".datepickermy").datepicker("setDate", new Date());
+<?php endif; ?>
+    });
+</script>
+<script>
+    // Get the modal
+    var modal = document.getElementById('modal-show');
+    var modal1 = document.getElementById('modal-show-reject');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        } else if (event.target == modal1) {
+            modal1.style.display = "none";
+        }
+    }
+
+    $(document).ready(function () {
+
+        $(".btn-approve-leader").click(function () {
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            $.ajax({
+                method: "POST",
+                url: "/list-approve/approve-by-leader",
+                data: {
+                    id_leave: id_leave
+                }
+            }).done(function (data) {
+                if (data == 2) {
+                    Swal.fire({
+                        title: 'Thành công?',
+                        text: "Bạn duyệt thành công !",
+                        icon: 'success'
+                    }).then((result) => {
+                        location.reload();
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Oop...!",
+                        text: "Đã xảy ra lổi xin vui lòng kiểm tra lại !"
+                    })
+                }
+            });
+            return false;
+        });
+
+        $('.btn-approve-hr').click(function () {
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            $.ajax({
+                method: "POST",
+                url: "/list-approve/approve-by-hr",
+                data: {
+                    id_leave: id_leave
+                }
+            }).done(function (data) {
+                if (data == 1) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Oop...!",
+                        text: "Đã xảy ra lổi xin vui lòng kiểm tra lại !"
+                    });
+                } else if (data == 2) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "Oop...!",
+                        text: "Leader chưa approved bạn không được approved !"
+                    });
+                } else if (data == 3) {
+                    Swal.fire({
+                        title: 'Thành công?',
+                        text: "Bạn duyệt thành công !",
+                        icon: 'success'
+                    }).then((result) => {
+                        location.reload();
+                    })
+                }
+            });
+            return false;
+        });
+
+        $('.btn-approve-ad').click(function () {
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            $.ajax({
+                method: "POST",
+                url: "/list-approve/approve-by-ad",
+                data: {
+                    id_leave: id_leave
+                }
+            }).done(function (data) {
+                Swal.fire({
+                    title: 'Thành công?',
+                    text: "Bạn duyệt thành công !",
+                    icon: 'success'
+                }).then((result) => {
+                    location.reload();
+                })
+            });
+            return false;
+        });
+
+        $('.btn-reject-leader').click(function () {
+            document.getElementById('modal-show-reject').style.display = 'block';
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            console.log(id_leave);
+            $('#id_leave2').val(id_leave);
+        });
+        $('.btn-reject-hr').click(function () {
+            document.getElementById('modal-show-reject').style.display = 'block';
+            var id_leave = $(this).parents('tr').find('.id-leave-detail').val();
+            console.log(id_leave);
+            $('#id_leave2').val(id_leave);
+        });
+
+        //get team by department
+        $('#department').change(function () {
+            var department = $('#department').val();
+            if (department == "") {
+                $("#team").empty();
+                $("#team").append("<option value = ''>---</option>");
+                $("#title").empty();
+                $("#title").append("<option value = ''>---</option>");
+                return false;
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: "/list-approve/get-team-or-title",
+                    data: {
+                        parent_id : department
+                    }
+                }).done(function (data) {
+                    var data_main = jQuery.parseJSON(data);
+                    console.log(data_main);
+                    $("#team").empty();
+                    $("#team").append("<option value = ''>---</option>");
+                    $.each(data_main, function (index, value) {
+                        $("#team").append("<option value = '"+value.id+"'>"+value.name+"</option>");
+                    });
+                });
+            }
+        });
+        
+        
+        //get title by team
+        $('#team').change(function () {
+            var team = $('#team').val();
+            if (team == "") {
+                $("#title").empty();
+                $("#title").append("<option value = ''>---</option>");
+                return false;
+            } else {
+                $.ajax({
+                    method: "POST",
+                    url: "/list-approve/get-team-or-title",
+                    data: {
+                        parent_id : team
+                    }
+                }).done(function (data) {
+                    var data_main = jQuery.parseJSON(data);
+                    console.log(data_main);
+                    $("#title").empty();
+                    $("#title").append("<option value = ''>---</option>");
+                    $.each(data_main, function (index, value) {
+                        $("#title").append("<option value = '"+value.id+"'>"+value.name+"</option>");
+                    });
+                });
+            }
+        });
+    });
+</script>
