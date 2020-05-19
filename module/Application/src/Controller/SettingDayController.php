@@ -3,8 +3,7 @@
 /**
  * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
  * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
-@@ -7,14 +8,281 @@
- * 
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
 namespace Application\Controller;
@@ -31,7 +30,6 @@ class SettingDayController extends My_Controller
         $settingDayList = $this->table->fetchAll();
 
         $this->layout()->setVariable('title', 'Date Special Setting');
-        return new ViewModel();
         return new ViewModel([
             'settingDayList' => $settingDayList,
             'messages' =>  $this->flashMessenger()->getMessages()
@@ -85,17 +83,17 @@ class SettingDayController extends My_Controller
                     'from' => $fromDay,
                     'to' => $toDay,
                     'off_date' => $offDay,
-                    'half_day' => $isHalfDay,
+                    'haft_day' => $isHalfDay,
                     'note' => $note,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'created_by' => $user->staff_id
+                    'create_by' => $user->staff_id
 
                 ];
-
+                
                 $settingDay = new SettingDay;
                 $settingDay->exchangeArray($data_insert);
                 $this->table->saveSettingDay($settingDay);
-
+              
                 $this->flashMessenger()->addMessage(
                     '<div class="alert alert-success" role="alert">
                         Add Success!

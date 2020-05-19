@@ -116,6 +116,7 @@ return [
                     ],
                 ],
             ],
+            
         ],
     ],
     'controllers' => [
@@ -128,7 +129,7 @@ return [
             Controller\ListApproveController::class => InvokableFactory::class,
             Controller\DiligentController::class => InvokableFactory::class,
             Controller\TimeController::class => InvokableFactory::class,
-            Controller\SettingDayController::class => InvokableFactory::class,
+           // Controller\SettingDayController::class => InvokableFactory::class,
             Controller\UserController::class => InvokableFactory::class,
             Controller\ApiController::class => InvokableFactory::class,
         ],
@@ -136,7 +137,7 @@ return [
     'model' => [
         'factories' => [
             Model\TimeGps::class => InvokableFactory::class,
-             Model\SettingDay::class => InvokableFactory::class,
+            Model\SettingDay::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [

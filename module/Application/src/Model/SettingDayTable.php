@@ -42,14 +42,14 @@ class SettingDayTable
             'from' =>  $settingDay->from,
             'to' =>  $settingDay->to,
             'off_date' => $settingDay->off_date,
-            'half_day' =>  $settingDay->half_day,
+            'haft_day' =>  $settingDay->haft_day,
             'note' => $settingDay->note,
             'created_at' => $settingDay->created_at,
-            'created_by' => $settingDay->created_by,
+            'create_by' => $settingDay->create_by,
         ];
-
+      
         $id = (int) $settingDay->id;   
-
+        
         if ($id === 0) {
             $this->tableGateway->insert($data);
             return;
@@ -72,4 +72,4 @@ class SettingDayTable
         $this->tableGateway->delete(['id' => (int) $id]);
     }
 
-} 
+}

@@ -15,17 +15,17 @@
                         <div class="col-md-12">
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="isHalfDay" value="0" <?php echo ($settingDay->half_day == 0)? "checked" : "" ?> onclick="display(0)">Whole day
+                                    <input type="radio" class="form-check-input" name="isHalfDay" value="0" <?php echo ($settingDay->haft_day == 0)? "checked" : "" ?> onclick="display(0)">Whole day
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="isHalfDay" value="1" <?php echo ($settingDay->half_day != 0)? "checked" : "" ?>  onclick="display(1)">Half day
+                                    <input type="radio" class="form-check-input" name="isHalfDay" value="1" <?php echo ($settingDay->haft_day != 0)? "checked" : "" ?>  onclick="display(1)">Half day
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="row" id="from-to-day" <?php echo ($settingDay->half_day !=0) ? 'style="display:none"' : '' ?>>
+                    <div class="row" id="from-to-day" <?php echo ($settingDay->haft_day !=0) ? 'style="display:none"' : '' ?>>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="bmd-label-floating">From day</label>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" id="haft-day" <?php echo ($settingDay->half_day !=0) ? 'style="display:block"' : '' ?>>
+                    <div class="row" id="haft-day" <?php echo ($settingDay->haft_day !=0) ? 'style="display:block"' : '' ?>>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="bmd-label-floating">Day</label>
@@ -64,15 +64,15 @@
                             <div class="form-check">
                                 <input class="offDay" type="checkbox" value="1" name="offDay" <?php echo ($settingDay->off_date == 1)? "checked" : "" ?> > Off day
                             </div>
-                            <div class="form-group day-session" <?php echo ($settingDay->half_day !=0) ? 'style="display:block"' : '' ?>>
+                            <div class="form-group day-session" <?php echo ($settingDay->haft_day !=0) ? 'style="display:block"' : '' ?>>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="day-session" value="2" <?php echo ($settingDay->half_day == 2)? "checked" : "" ?>>Morning
+                                        <input type="radio" class="form-check-input" name="day-session" value="2" <?php echo ($settingDay->haft_day == 2)? "checked" : "" ?>>Morning
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="day-session" value="1" <?php echo ($settingDay->half_day == 1)? "checked" : "" ?>>Afternoon
+                                        <input type="radio" class="form-check-input" name="day-session" value="1" <?php echo ($settingDay->haft_day == 1)? "checked" : "" ?>>Afternoon
                                     </label>
                                 </div>
                             </div>

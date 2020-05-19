@@ -20,9 +20,9 @@ class SettingDay
     public $from;
     public $to;
     public $off_date;
-    public $half_day;
+    public $haft_day;
     public $note;
-    public $created_by;
+    public $create_by;
     public $created_at;
 
 
@@ -33,9 +33,9 @@ class SettingDay
         $this->from  = $data['from'];
         $this->to  = $data['to'];
         $this->off_date  = $data['off_date'];
-        $this->half_day  =  $data['half_day'];
+        $this->haft_day =  $data['haft_day'];
         $this->note  = $data['note'];
-        $this->created_by  = $data['created_by'];
+        $this->create_by  = $data['create_by'];
         $this->created_at  =  $data['created_at'];
     }
 
@@ -75,7 +75,7 @@ class SettingDay
         $adapter = $db->DbAdapter();
 
         $query = sprintf("select * from `setting_date` where (month(`from`) = month(CAST('%s' AS DATE)) and year(`from`) = year(CAST('%s' AS DATE))) or (month(`to`) = month(CAST('%s' AS DATE)) and year(`to`) = year(CAST('%s' AS DATE)))", $search, $search, $search, $search);
-
+        
         $result = $adapter->query($query, \Zend\Db\Adapter\Adapter::QUERY_MODE_EXECUTE);
         $result_arr =  $db->fetch_array($result);
         return $result_arr;

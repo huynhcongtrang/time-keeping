@@ -78,7 +78,7 @@ class MyLeaveController extends My_Controller {
         $list_leave_mm = $QLeaveDetail->getLeaveByIdMM($user->staff_id);
         $list_leave_mdm = $QLeaveDetail->getLeaveByIdMDM($user->staff_id);
         $list_leave_mdm = $this->solvedFromToMDM($list_leave_mdm);
-
+        
         $this->layout()->setVariable('title', 'My Leave');
         return new ViewModel([
             'leave_time' => $leave_time,

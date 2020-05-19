@@ -289,13 +289,7 @@
 </div>
 <script>
     $(document).ready(function () {
-        <?php if (isset($this->param['date'])): ?>
-    $(".datepickermy").datepicker("setDate", new Date('<?php echo $this->param['date'] ?>'))
-        <?php else: ?>
-    $(".datepickermy").datepicker("setDate", new Date())
-        <?php endif; ?>
     $('.total_leave').text(<?php echo (isset($total_leave_contract))?$total_leave_contract:0 ?>);
-
     });
 </script>
 <script>
