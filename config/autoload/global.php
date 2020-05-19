@@ -24,4 +24,10 @@ return [
     'session_storage' => [
         'type' => SessionArrayStorage::class,
     ],
+    'db' => [
+        'driver' => 'Pdo',
+        'dsn' => 'mysql:dbname=time_keeping;host=localhost',
+        'username' => 'root',
+        'password' => ''
+    ],
 ];

@@ -1,154 +1,118 @@
-<div class="container-fluid">
-    <div class="container-fluid">
-        <div class="col-md-12">
-            <div class="card card-plain">
-                <div class="card-header card-header-primary tap-search">
-                    <h4 class="card-title mt-0">Search</h4>
-                </div>
-                <div class="card-body tap-search-body">
-                    <form>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">Month</label>
-                                    <input type="text" class="form-control date" value="03/2020">
+<?php date_default_timezone_set('Asia/Ho_Chi_Minh');?>
+<div id="modal-show" class="modal-show1" style="display: block">
+    <div class="modal-content-show2 animate-show">
+        <div class="imgcontainer-close">
+            <a href="/setting-day"><span class="close-show" title="Close Modal">&times;</span></a>
+        </div>
+
+        <div class="container-show">
+            <div class="navbar-wrapper">
+                <a class="navbar-brand" id="trang" href="javascript:;">Edit special day</a>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="isHalfDay" value="0" <?php echo ($settingDay->half_day == 0)? "checked" : "" ?> onclick="display(0)">Whole day
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="isHalfDay" value="1" <?php echo ($settingDay->half_day != 0)? "checked" : "" ?>  onclick="display(1)">Half day
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="from-to-day" <?php echo ($settingDay->half_day !=0) ? 'style="display:none"' : '' ?>>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">From day</label>
+                                <input type="text" class="form-control datepicker dpk" name="from_day" required="required" value="<?php echo $settingDay->from; ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">To day</label>
+                                <input type="text" class="form-control datepicker dpk" name="to_day" required="required" value="<?php echo $settingDay->to; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="haft-day" <?php echo ($settingDay->half_day !=0) ? 'style="display:block"' : '' ?>>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Day</label>
+                                <input type="text" class="form-control datepicker dpk" name="aDay" required="required" value="<?php echo $settingDay->from; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="type-day">Type day</label>
+                                <select class="form-control" id="type-day" name="type-day">
+                                    <option value="1" <?php echo ($settingDay->type == 1)? "selected" : "" ?>>Saturday</option>
+                                    <option value="2" <?php echo ($settingDay->type == 2)? "selected" : "" ?>>Holiday</option>
+                                    <option value="3" <?php echo ($settingDay->type == 3)? "selected" : "" ?>>Any day</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                <input class="offDay" type="checkbox" value="1" name="offDay" <?php echo ($settingDay->off_date == 1)? "checked" : "" ?> > Off day
+                            </div>
+                            <div class="form-group day-session" <?php echo ($settingDay->half_day !=0) ? 'style="display:block"' : '' ?>>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="day-session" value="2" <?php echo ($settingDay->half_day == 2)? "checked" : "" ?>>Morning
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="day-session" value="1" <?php echo ($settingDay->half_day == 1)? "checked" : "" ?>>Afternoon
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                        <br>
-
-                        <button type="submit" class="btn btn-primary">Search<div class="ripple-container"></div></button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <h6>List</h6>
-            <button type="button" onclick="document.getElementById('modal-show').style.display = 'block'" class="btn btn-success"><span class="material-icons" style="color:#FFF">add</span> Set special day</button>
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="">
-                            <th>
-                                From day
-                            </th>
-                            <th>
-                                To day
-                            </th>
-                            <th>
-                                Type day
-                            </th>
-                            <th>
-                                Note
-                            </th>
-                            <th>
-                                Created at
-                            </th>
-                            <th>
-                                Created by
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        12-2-2020
-                                    </td>
-                                    <td>
-                                        15-02-2020
-                                    </td>
-                                    <td>
-                                        Tet Holiday
-                                    </td>
-                                    <td>
-                                        Nghi tet nhe
-                                    </td>
-                                    <td>
-                                        17:35 20-03-2020
-                                    </td>
-                                    <td>
-                                        Trang
-                                    </td>
-                                    <td>
-                                        <span class="material-icons btn-hover" style="color: #0190B0" title="Chỉnh sửa">create</span>
-                                        <span class="material-icons btn-hover" style="color: red" title="Xoá">clear</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div id="modal-show" class="modal-show1">
-            <div class="modal-content-show2 animate-show">
-                <div class="imgcontainer-close">
-                    <span onclick="document.getElementById('modal-show').style.display = 'none'" class="close-show"
-                          title="Close Modal">&times;</span>
-                </div>
-
-                <div class="container-show">
-                    <div class="navbar-wrapper">
-                        <a class="navbar-brand" id="trang" href="javascript:;">Add special day</a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Note</label>
+                                <textarea required="required" class="form-control" rows="5" name="note"><?php echo $settingDay->note ?></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">From day</label>
-                                        <input type="text" class="form-control date1" value="01/03/2020">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">To day</label>
-                                        <input type="text" class="form-control date1" value="01/03/2020">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlSelect1">Type day</label>
-                                        <select class="form-control" id="exampleFormControlSelect1">
-                                            <option>1</option>
-                                            <option>2</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Note</label>
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">What's on your mind ?</label>
-                                            <textarea class="form-control" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary pull-right">Add day</button>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary pull-right">Edit day</button>
+                    <div class="clearfix"></div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<script>
-    // Get the modal
-    var modal = document.getElementById('modal-show');
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+<script>
+    function display(x) {
+        if (x == 0) {
+            $("#from-to-day").show(500);
+            $("#haft-day").hide(500);
+            $('.day-session').fadeOut('slow');
+        } else {
+            $("#from-to-day").hide(500);
+            $("#haft-day").show(500);
+            $('.day-session').fadeIn('slow');
         }
     }
+</script>
+
+<script>
+    var dateToday = new Date();
+    $(".dpk").datepicker({
+        showButtonPanel: true,
+        minDate: dateToday,
+        changeMonth: false,
+    });
 </script>

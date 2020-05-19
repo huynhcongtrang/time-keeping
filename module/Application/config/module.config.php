@@ -136,6 +136,7 @@ return [
     'model' => [
         'factories' => [
             Model\TimeGps::class => InvokableFactory::class,
+             Model\SettingDay::class => InvokableFactory::class,
         ],
     ],
     'view_manager' => [
