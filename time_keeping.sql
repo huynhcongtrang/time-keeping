@@ -11,7 +11,7 @@
  Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 19/05/2020 00:04:20
+ Date: 20/05/2020 16:52:03
 */
 
 SET NAMES utf8mb4;
@@ -56,7 +56,7 @@ CREATE TABLE `leave_detail`  (
   `count_day` decimal(11, 1) NOT NULL COMMENT 'Số ngày nghĩ : vì khi đăng kí nghĩ có ngay lể sẽ trừ ra',
   `del` tinyint(3) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of leave_detail
@@ -64,6 +64,9 @@ CREATE TABLE `leave_detail`  (
 INSERT INTO `leave_detail` VALUES (22, 3, '2020-05-04', '2020-05-06', 1, 23, 'trang tech', 0, 2, '2020-05-16 10:59:01', NULL, NULL, '2020-05-03 18:34:19', 3.0, 0);
 INSERT INTO `leave_detail` VALUES (24, 4, '2020-05-13', '2020-05-15', 1, 4, 'test', 1, NULL, NULL, NULL, NULL, '2020-05-12 22:39:29', 3.0, 0);
 INSERT INTO `leave_detail` VALUES (25, 3, '2020-05-17', '2020-05-18', 1, 23, 'tra', 1, 2, '2020-05-16 11:20:16', 4, '2020-05-16 11:20:31', '2020-05-16 11:19:46', 1.0, 0);
+INSERT INTO `leave_detail` VALUES (26, 1, '2020-05-20', '2020-05-20', 1, 23, 'test', 1, NULL, NULL, NULL, NULL, '2020-05-19 22:09:32', 1.0, 0);
+INSERT INTO `leave_detail` VALUES (27, 3, '2020-05-21', '2020-05-22', 1, 23, 'test', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:21:59', 2.0, 0);
+INSERT INTO `leave_detail` VALUES (28, 3, '2020-05-29', '2020-05-31', 1, 23, 'eaaa', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:22:13', 2.0, 0);
 
 -- ----------------------------
 -- Table structure for leave_time
@@ -242,13 +245,12 @@ CREATE TABLE `setting_date`  (
   `created_at` datetime(0) NULL DEFAULT NULL,
   `create_by` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of setting_date
 -- ----------------------------
-INSERT INTO `setting_date` VALUES (1, 1, '2020-04-29', '2020-04-30', 1, 0, NULL, NULL, NULL);
-INSERT INTO `setting_date` VALUES (2, 1, '2020-05-07', '2020-05-07', 1, 1, NULL, NULL, NULL);
+INSERT INTO `setting_date` VALUES (3, 1, '2020-05-19', '2020-05-19', 1, 0, 'rưaa', '2020-05-19 23:09:35', 1);
 
 -- ----------------------------
 -- Table structure for shift
@@ -424,8 +426,8 @@ CREATE TABLE `time_late`  (
   `status` tinyint(4) NOT NULL,
   `reason_id` int(11) NOT NULL,
   `add_reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
-  `approved_by` int(11) NOT NULL,
-  `approved_at` datetime(0) NULL DEFAULT NULL,
+  `create_by` int(11) NOT NULL,
+  `created_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
