@@ -80,5 +80,18 @@ class SettingDay
         $result_arr =  $db->fetch_array($result);
         return $result_arr;
     }
+    
+    public function getDayAdvance($date_temp){
+        $db = new \Database\Controller\AdapterController();
+        $adapter = $db->DbAdapter();
+        $sql = "CALL get_day_advance(?,?)";
+        $statement = $adapter->createStatement($sql);
+        $statement->prepare();
+        $result = $statement->execute(array(
+            'month' => $date_temp[1],
+            'year' => $date_temp[0],
+        ));
+        return $db->fetch_array_key_value('date','haft_day',$result);
+    }
 
 }

@@ -98,5 +98,6 @@ class My_Controller extends AbstractActionController {
             return $miles;
         }
     }
+    
 
 }

@@ -19870,3 +19870,6 @@ Copyright (c) 2015 Daniel Eden
 .bold{
     font-weight: bold;
 }
+.background-break {
+    background: rgba(240, 157, 255, 0.651);
+}

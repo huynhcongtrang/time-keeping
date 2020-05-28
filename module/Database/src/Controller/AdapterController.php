@@ -28,6 +28,7 @@ class AdapterController extends AbstractActionController {
         }
         return $data_return;
     }
+    
     public function fetch_array_key_value($key,$value,$data){
         $data_return = array();
         foreach ($data as $item){
@@ -35,20 +36,30 @@ class AdapterController extends AbstractActionController {
         }
         return $data_return;
     }
-
-//    public function indexAction() {
-//        $adapter = $this->AdapterDB();
-//        $sql = new Sql($adapter);
-//        $select = $sql->select()
-//                ->from('trang');
-//        $statement  = $sql->prepareStatementForSqlObject($select);
-//        $result = $statement->execute();
-////        $statement = $adapter->query('SELECT * FROM `trang`');
-////        $result = $statement->execute();
-//        echo "<pre>";
-//        print_r($result->current());
-//        echo "</pre>";
-//        exit();
-//
-//    }
+    
+    public function fetch_array_timing($data){
+        $array_main = array();
+        $data = $this->fetch_array($data);
+        if(!empty($data)){
+            $key = $data[1]['day'];
+        }
+        $array_temp = array();
+        foreach ($data as $keyt =>$item){
+            if($item['day'] == $key){
+                $array_temp[] = $item;
+                if($keyt == count($data)){
+                    $array_main[$key] = $array_temp;
+                }
+            }else {
+                $array_main[$key] = $array_temp;
+                $array_temp = [];
+                $key = $item['day'];
+                $array_temp[] = $item;
+                if($keyt == count($data)){
+                    $array_main[$key] = $array_temp;
+                }
+            }
+        }
+        return $array_main;
+    }
 }

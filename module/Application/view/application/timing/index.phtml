@@ -1,3 +1,17 @@
+<?php
+function isWeekend($date) {
+    $weekDay = date('w', strtotime($date));
+    return ($weekDay == 0);
+}
+function findKeyValue($key,$value,$data){
+    foreach ($data as $item){
+        if($item[$key] == $value){
+            return $item;
+        }
+    }
+    return '';
+}
+?>
 <div class="container-fluid">
     <div class="container-fluid">
         <div class="row">
@@ -104,24 +118,47 @@
                                 </th>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <?php if(isset($this->all_date)) foreach ($this->all_date as $item):?>
+                                    <tr <?php if(isWeekend($item['Date'])){
+                                        echo 'class="background-break" title="Hôm nay là chủ nhật"';
+                                    }else if(in_array($item['Date'], $this->day_all_advance) && $this->day_advance[$item['Date']] == 0){
+                                        echo 'class="background-break" title="Hôm nay là ngày nghĩ"';
+                                    }else if(in_array($item['Date'], $this->day_all_advance) && $this->day_advance[$item['Date']] != 0){
+                                        echo 'class="background-break" title="Hôm nay được nghĩ nữa ngày"';
+                                    }?>>
+                                        <?php 
+                                            $check_in_at = '' ;
+                                            $check_out_at = '' ;
+                                            $count_work = '' ;
+                                            $reason = '' ;
+                                            $note = '' ;
+                                            $action = array();//1,2,3: bosungcong,dangkiphep,xacnhantresom
+                                        ?>
+                                        <?php if(isset($this->detail_timing[$item['Date']])){
+                                            $find = findKeyValue('type', 1, $this->detail_timing[$item['Date']]);
+                                            if(!empty($find)){
+                                                $check_in_at = $find['check_in_at'];
+                                                $check_out_at = $find['check_out_at'];
+                                                //phan sau tinh gio
+                                            }
+                                        }?>
                                         <td>
-                                            MonDay , 28-03-2020
+                                            <?php echo date_format(date_create($item['Date']), 'l, d-m-Y')?>
                                         </td>
                                         <td>
-                                            17:15
+                                            <?php echo $check_in_at?>
                                         </td>
                                         <td>
-                                            16:23
+                                            <?php echo $check_out_at?>
                                         </td>
                                         <td>
-                                            1 day
+                                            <?php echo $count_work?>
                                         </td>
                                         <td>
-
+                                            <?php echo $reason?>
                                         </td>
                                         <td>
-
+                                            <?php echo $note?>
                                         </td>
                                         <td>
                                             <div class="dropdown show">
@@ -137,6 +174,7 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <?php endforeach;?>
                                 </tbody>
                             </table>
                         </div>
