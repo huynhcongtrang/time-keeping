@@ -20,5 +20,11 @@ class IndexController extends My_Controller {
         $this->layout()->setVariable('title', 'Dashboard');
         return new ViewModel();
     }
+    public function trangAction(){
+        echo "<pre>";
+        print_r(123);
+        echo "</pre>";
+        exit();
+    }
 
 }

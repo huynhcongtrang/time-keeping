@@ -67,7 +67,7 @@ class TimeController extends My_Controller {
                                 $data_insert = array(
                                     'staff_id' => $user->staff_id,
                                     'day' => date('Y-m-d'),
-                                    'check_at' => date("h:i"),
+                                    'check_at' => date("H:i"),
                                     'long' => $long,
                                     'lat' => $lat,
                                     'img1' => $name1,
@@ -157,7 +157,7 @@ class TimeController extends My_Controller {
                                     $data_insert = array(
                                         'staff_id' => $user->staff_id,
                                         'day' => date('Y-m-d'),
-                                        'check_at' => date("h:i"),
+                                        'check_at' => date("H:i"),
                                         'long' => $long,
                                         'lat' => $lat,
                                         'img1' => $name1,

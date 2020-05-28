@@ -33,16 +33,15 @@ class TimingController extends My_Controller
         }
         
         $detailTiming = $QTiming->getDetailTiming($user->staff_id, $date_temp);
-//        echo "<pre>";
-//        print_r($detailTiming);
-//        echo "</pre>";
-//        exit();
+        $shift_stafff =  $QTiming->getShiftById($user->staff_id);
+        
         $this->layout()->setVariable('title', 'My Check In');
         return new ViewModel([
             'all_date' => $all_date ,
             'day_all_advance' => $day_all_advance , 
             'day_advance' => $day_advance,
-            'detail_timing' => $detailTiming
+            'detail_timing' => $detailTiming,
+            'shift_stafff' => $shift_stafff
         ]);
     }
 }

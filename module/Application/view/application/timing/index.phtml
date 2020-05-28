@@ -11,6 +11,9 @@ function findKeyValue($key,$value,$data){
     }
     return '';
 }
+function getTotalHours(DateInterval $int){
+    return ($int->d * 24) + $int->h + $int->i / 60;
+}
 ?>
 <div class="container-fluid">
     <div class="container-fluid">
@@ -132,24 +135,103 @@ function findKeyValue($key,$value,$data){
                                             $count_work = '' ;
                                             $reason = '' ;
                                             $note = '' ;
+                                            $img_temp1 = '';
+                                            $img_temp2 = '';
                                             $action = array();//1,2,3: bosungcong,dangkiphep,xacnhantresom
                                         ?>
                                         <?php if(isset($this->detail_timing[$item['Date']])){
                                             $find = findKeyValue('type', 1, $this->detail_timing[$item['Date']]);
                                             if(!empty($find)){
+                                                
                                                 $check_in_at = $find['check_in_at'];
                                                 $check_out_at = $find['check_out_at'];
+                                                
+                                                if(!empty($find['img1']) && !empty($check_in_at)){
+                                                    $img_temp1 = '<div class="row"><img class="rounded" width="70px" src="'.HOST.'photo/pg-check-in/'.$find['img1'].'"></div>';
+                                                }
+                                                
+                                                if(!empty($find['img2']) && !empty($check_out_at)){
+                                                    $img_temp2 = '<div class="row"><img class="rounded" width="70px" src="'.HOST.'photo/pg-check-in/'.$find['img2'].'"></div>';
+                                                }
+                                                
+                                                if(!empty($check_in_at) && !empty($check_out_at)){// tinh so ngay cong neu check in
+                                                    $check_in_temp = '';
+                                                    $type_check_in = 0;
+                                                    $type_check_out = 0;
+                                                    $check_out_temp = '';
+                                                    if((date_create($check_in_at) > date_create($this->shift_stafff['begin_break_time']))&&(date_create($check_in_at) < date_create($this->shift_stafff['end_break_time']))){
+                                                        $type_check_in = 1;
+                                                        $check_in_temp = $this->shift_stafff['end_break_time'];
+                                                    }else if(date_create($check_in_at) < date_create($this->shift_stafff['begin'])){
+                                                        $type_check_in = 2;
+                                                        $check_in_temp = $this->shift_stafff['begin'];
+                                                    }else {
+                                                        $type_check_in = 3;
+                                                        $check_in_temp = $check_in_at;
+                                                    }
+                                                        
+                                                    
+                                                    if((date_create($check_out_at) > date_create($this->shift_stafff['begin_break_time']))&&(date_create($check_out_at) < date_create($this->shift_stafff['end_break_time']))){
+                                                        $type_check_out = 1;
+                                                        $check_out_temp = $this->shift_stafff['begin_break_time'];
+                                                    }else if(date_create($check_out_at) > date_create($this->shift_stafff['end'])){
+                                                        $type_check_out = 2;
+                                                        $check_out_temp = $this->shift_stafff['end'];
+                                                    }else {
+                                                        $type_check_out = 3;
+                                                        $check_out_temp = $check_out_at;
+                                                    }
+                                                    
+                                                    if($type_check_in != 1 && $type_check_out != 1){
+                                                        $time_break = date_diff(date_create($this->shift_stafff['begin_break_time']),date_create($this->shift_stafff['end_break_time']));
+                                                        $total_count_time = date_diff(date_create($check_in_temp), date_create($check_out_temp));
+                                                        $count_time = getTotalHours($total_count_time) - getTotalHours($time_break);
+                                                        if($count_time >= 6){
+                                                            $count_work = '1 ngày công ';
+                                                        }else if($count_time >= 3){
+                                                            $count_work = '0.5 ngày công';
+                                                        }
+                                                    }else {
+                                                        $total_count_time = date_diff(date_create($check_in_temp), date_create($check_out_temp));
+                                                        $count_time = getTotalHours($total_count_time);
+                                                        if($count_time >= 6){
+                                                            $count_work = '1 ngày công ';
+                                                        }else if($count_time >= 3){
+                                                            $count_work = '0.5 ngày công';
+                                                        }
+                                                    }
+                                                }
+                                                $find_late = findKeyValue('type', 4, $this->detail_timing[$item['Date']]);
+                                                if(!empty($find_late)){
+                                                    $reason = $find_late['reason'];
+                                                    $note = $find_late['note'];
+                                                }
                                                 //phan sau tinh gio
+                                            }else {
+                                                $find_leave = findKeyValue('type',2, $this->detail_timing[$item['Date']]);
+                                                if(!empty($find_leave) && $find_leave['ngay_cong']!=0){
+                                                    $count_work = $find_leave['ngay_cong'].' ngày phép';
+                                                    $reason = $find_leave['reason'];
+                                                    $note = $find_leave['note'];
+                                            }else {
+                                                    $find_temp = findKeyValue('type',3, $this->detail_timing[$item['Date']]);
+                                                    if(!empty($find_temp) && $find_temp['ngay_cong']!=0){
+                                                        $count_work = 'Bổ sung '.$find_temp['ngay_cong'].' ngày';
+                                                        $reason = $find_temp['reason'];
+                                                        $note = $find_temp['note'];
+                                                    }
+                                                }
                                             }
+                                            
                                         }?>
                                         <td>
                                             <?php echo date_format(date_create($item['Date']), 'l, d-m-Y')?>
                                         </td>
                                         <td>
-                                            <?php echo $check_in_at?>
+                                            <?php echo $img_temp1.$check_in_at?>
                                         </td>
                                         <td>
-                                            <?php echo $check_out_at?>
+                                            <?php echo $img_temp2.$check_out_at?>
                                         </td>
                                         <td>
                                             <?php echo $count_work?>

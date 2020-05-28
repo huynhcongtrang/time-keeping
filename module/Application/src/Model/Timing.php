@@ -44,5 +44,17 @@ class Timing{
         ));
         return $db->fetch_array_timing($result);
     }
+    
+    public function getShiftById($staff_id){
+        $db = new \Database\Controller\AdapterController();
+        $adapter = $db->DbAdapter();
+        $sql = "SELECT s.* FROM staff_shift ss INNER JOIN shift s ON ss.shift_work_id = s.id WHERE ss.staff_id = ?";
+        $statement = $adapter->createStatement($sql);
+        $statement->prepare();
+        $result = $statement->execute(array(
+            'staff_id' => $staff_id,
+        ));
+        return $result->current();
+    }
             
 }
