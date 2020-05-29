@@ -21,7 +21,6 @@ use Zend\Cache\StorageFactory;
 use Zend\Cache\Storage\Adapter\Apc;
 use Zend\Cache\Storage\Plugin\ExceptionHandler;
 
-define("HOST", "http://local.time-keeping.vn/");
 
 class My_Controller extends AbstractActionController {
 
