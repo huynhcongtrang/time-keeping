@@ -131,6 +131,7 @@ return [
             Controller\TimeController::class => InvokableFactory::class,
            // Controller\SettingDayController::class => InvokableFactory::class,
             Controller\UserController::class => InvokableFactory::class,
+            Controller\ChartController::class => InvokableFactory::class,
             Controller\ApiController::class => InvokableFactory::class,
         ],
     ],
