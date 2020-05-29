@@ -11,7 +11,7 @@
  Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 20/05/2020 16:52:03
+ Date: 29/05/2020 09:33:17
 */
 
 SET NAMES utf8mb4;
@@ -36,6 +36,16 @@ INSERT INTO `access_group` VALUES (2, NULL, '1,2,3,4,5,6,7,8,9,10');
 INSERT INTO `access_group` VALUES (3, NULL, '1,2,3,4,5,6,7,8,9,10,11');
 
 -- ----------------------------
+-- Table structure for date_temp
+-- ----------------------------
+DROP TABLE IF EXISTS `date_temp`;
+CREATE TABLE `date_temp`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for leave_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `leave_detail`;
@@ -56,7 +66,7 @@ CREATE TABLE `leave_detail`  (
   `count_day` decimal(11, 1) NOT NULL COMMENT 'Số ngày nghĩ : vì khi đăng kí nghĩ có ngay lể sẽ trừ ra',
   `del` tinyint(3) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of leave_detail
@@ -64,9 +74,10 @@ CREATE TABLE `leave_detail`  (
 INSERT INTO `leave_detail` VALUES (22, 3, '2020-05-04', '2020-05-06', 1, 23, 'trang tech', 0, 2, '2020-05-16 10:59:01', NULL, NULL, '2020-05-03 18:34:19', 3.0, 0);
 INSERT INTO `leave_detail` VALUES (24, 4, '2020-05-13', '2020-05-15', 1, 4, 'test', 1, NULL, NULL, NULL, NULL, '2020-05-12 22:39:29', 3.0, 0);
 INSERT INTO `leave_detail` VALUES (25, 3, '2020-05-17', '2020-05-18', 1, 23, 'tra', 1, 2, '2020-05-16 11:20:16', 4, '2020-05-16 11:20:31', '2020-05-16 11:19:46', 1.0, 0);
-INSERT INTO `leave_detail` VALUES (26, 1, '2020-05-20', '2020-05-20', 1, 23, 'test', 1, NULL, NULL, NULL, NULL, '2020-05-19 22:09:32', 1.0, 0);
+INSERT INTO `leave_detail` VALUES (26, 1, '2020-05-18', '2020-05-19', 1, 23, 'test', 1, NULL, NULL, NULL, NULL, '2020-05-19 22:09:32', 1.0, 0);
 INSERT INTO `leave_detail` VALUES (27, 3, '2020-05-21', '2020-05-22', 1, 23, 'test', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:21:59', 2.0, 0);
 INSERT INTO `leave_detail` VALUES (28, 3, '2020-05-29', '2020-05-31', 1, 23, 'eaaa', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:22:13', 2.0, 0);
+INSERT INTO `leave_detail` VALUES (29, 1, '2020-05-13', '2020-05-14', 1, 4, 'Con kết hôn nên Xin nghĩ', 1, NULL, NULL, NULL, NULL, '2020-05-28 22:15:49', 2.0, 0);
 
 -- ----------------------------
 -- Table structure for leave_time
@@ -213,9 +224,21 @@ INSERT INTO `reason_reject_leave` VALUES (7, 22, 1, 'sai roi', 4, '2020-05-16 10
 DROP TABLE IF EXISTS `reason_staff_temp`;
 CREATE TABLE `reason_staff_temp`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `reason_detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
+  `decription` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of reason_staff_temp
+-- ----------------------------
+INSERT INTO `reason_staff_temp` VALUES (1, 'Công tác ngoài', 'Nội dung bắt buộc: Ghi rõ nơi bạn đi công tác ở ngoài', 'Có đi làm nhưng không chấm công được do đi công tác, học, họp, lấy & nộp hồ sơ, giao hàng, khám sức khỏe Công ty.');
+INSERT INTO `reason_staff_temp` VALUES (2, 'Quên check in', NULL, 'Có đi làm nhưng QUÊN thực hiện CHECK IN giờ vào.');
+INSERT INTO `reason_staff_temp` VALUES (3, 'Quên check out', NULL, 'Có đi làm nhưng QUÊN thực hiện CHECK OUT giờ ra.');
+INSERT INTO `reason_staff_temp` VALUES (4, 'Quên check in & check out', NULL, 'Có đi làm nhưng QUÊN thực hiện CHECK IN giờ vào/ CHECK OUT giờ ra.');
+INSERT INTO `reason_staff_temp` VALUES (5, 'Hệ thống lỗi/ Chưa lấy dấu vân tay/Làm qua 12h đêm', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết', 'Có đi làm nhưng do hệ thống bị lỗi không thực hiện chấm công được/ nhân viên mới chưa lấy dấu vân tay.');
+INSERT INTO `reason_staff_temp` VALUES (6, 'Lý do khác', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết', NULL);
 
 -- ----------------------------
 -- Table structure for reason_time_late
@@ -223,12 +246,20 @@ CREATE TABLE `reason_staff_temp`  (
 DROP TABLE IF EXISTS `reason_time_late`;
 CREATE TABLE `reason_time_late`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `reason_detail` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
-  `decription` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-  `type` int(11) NOT NULL,
+  `decription` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of reason_time_late
+-- ----------------------------
+INSERT INTO `reason_time_late` VALUES (1, 'Đi lấy & nộp hồ sơ, Giao hàng, Đi gặp đối tác', 'Nội dung bắt buộc: Ghi rõ tên cơ quan/ đối tác khi đi công tác ngoài', NULL);
+INSERT INTO `reason_time_late` VALUES (2, 'Bản thân/bố mẹ/con cái bị ốm đau, đi khám bệnh, thiên tai', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết đi trễ/ về sớm', NULL);
+INSERT INTO `reason_time_late` VALUES (3, 'Ngủ quên, kẹt xe, hư xe, kẹt thang máy, chờ lấy thẻ xe, đưa con đến trường', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết đi trễ/ về sớm', NULL);
+INSERT INTO `reason_time_late` VALUES (4, 'Hết việc/ Trực trưa/ Lỗi hệ thống', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết đi trễ/ về sớm', NULL);
+INSERT INTO `reason_time_late` VALUES (5, 'Lý do khác', 'Nội dung bắt buộc: Ghi rõ lý do chi tiết đi trễ/ về sớm', '');
 
 -- ----------------------------
 -- Table structure for setting_date
@@ -244,13 +275,14 @@ CREATE TABLE `setting_date`  (
   `note` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
   `created_at` datetime(0) NULL DEFAULT NULL,
   `create_by` int(11) NULL DEFAULT NULL,
+  `public` tinyint(2) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of setting_date
 -- ----------------------------
-INSERT INTO `setting_date` VALUES (3, 1, '2020-05-19', '2020-05-19', 1, 0, 'rưaa', '2020-05-19 23:09:35', 1);
+INSERT INTO `setting_date` VALUES (3, 1, '2020-05-19', '2020-05-20', 1, 0, 'rưaa', '2020-05-19 23:09:35', 1, NULL);
 
 -- ----------------------------
 -- Table structure for shift
@@ -367,8 +399,14 @@ CREATE TABLE `staff_temp`  (
   `reson_id` int(11) NOT NULL,
   `add_reason` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL,
   `created_at` datetime(0) NOT NULL,
+  `count_day` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of staff_temp
+-- ----------------------------
+INSERT INTO `staff_temp` VALUES (1, 1, 1, 1, 6, 'He thong loi', '2020-05-06 22:44:13', 1);
 
 -- ----------------------------
 -- Table structure for team
@@ -407,13 +445,16 @@ CREATE TABLE `time_gps`  (
   `img2` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `type` tinyint(3) NOT NULL COMMENT '1 : check in 2: check out',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of time_gps
 -- ----------------------------
-INSERT INTO `time_gps` VALUES (10, 1, '2020-04-20', '10:21:00', '109.153252', '12.049567', 'image_1_1_1587396062.png', 'image_2_1_1587396062.png', 1);
-INSERT INTO `time_gps` VALUES (11, 1, '2020-04-20', '10:21:00', '109.15325199999998', '12.049567', 'image_1_1_1587396108.png', 'image_2_1_1587396108.png', 2);
+INSERT INTO `time_gps` VALUES (10, 1, '2020-05-20', '08:21:00', '109.153252', '12.049567', 'image_1_1_1587396062.png', 'image_2_1_1587396062.png', 1);
+INSERT INTO `time_gps` VALUES (11, 1, '2020-05-20', '17:22:00', '109.15325199999998', '12.049567', 'image_1_1_1587396108.png', 'image_2_1_1587396108.png', 2);
+INSERT INTO `time_gps` VALUES (14, 1, '2020-05-27', '11:27:00', '106.716331713232', '10.82954766590579', 'image_1_1_1590596866.png', 'image_2_1_1590596866.png', 1);
+INSERT INTO `time_gps` VALUES (18, 1, '2020-05-28', '12:20:00', '106.71619216426231', '10.828836424532948', 'image_1_1_1590676703.png', 'image_2_1_1590676703.png', 1);
+INSERT INTO `time_gps` VALUES (19, 1, '2020-05-28', '16:38:00', '106.71619216426231', '10.828836424532948', 'image_1_1_1590676729.png', 'image_2_1_1590676729.png', 2);
 
 -- ----------------------------
 -- Table structure for time_late
@@ -430,6 +471,11 @@ CREATE TABLE `time_late`  (
   `created_at` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of time_late
+-- ----------------------------
+INSERT INTO `time_late` VALUES (1, 1, '2020-05-20', 2, 1, 'Đi trể r', 1, '2020-05-28 21:18:15');
 
 -- ----------------------------
 -- Table structure for type_shift
@@ -468,6 +514,515 @@ INSERT INTO `user` VALUES (1, 'admin@gmail.com', 'e10adc3949ba59abbe56e057f20f88
 INSERT INTO `user` VALUES (2, 'leader@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 2, 2);
 INSERT INTO `user` VALUES (3, 'staff@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 1, 3);
 INSERT INTO `user` VALUES (4, 'hr@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 2, 4);
+
+-- ----------------------------
+-- Procedure structure for get_date_month
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `get_date_month`;
+delimiter ;;
+CREATE PROCEDURE `get_date_month`(IN `dayy` INT, IN `monthh` INT, IN `yearr` INT)
+BEGIN
+	SELECT
+	a.Date 
+	FROM
+		(
+		SELECT
+			CONCAT(yearr,'-',monthh,'-',dayy) - INTERVAL ( a.a + ( 10 * b.a ) + ( 100 * c.a ) ) DAY AS Date 
+		FROM
+			(
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS a
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS b
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS c 
+		) a 
+	WHERE
+		MONTH ( a.Date ) =  monthh
+		AND YEAR ( a.Date ) = yearr
+	ORDER BY
+		Date;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for get_day_advance
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `get_day_advance`;
+delimiter ;;
+CREATE PROCEDURE `get_day_advance`(IN monthh INT , IN yearr INT)
+BEGIN
+	DROP TEMPORARY TABLE
+	IF
+		EXISTS date_temp;
+	CREATE TEMPORARY TABLE date_temp SELECT
+	a.Date 
+	FROM
+		(
+		SELECT
+			curdate( ) - INTERVAL ( a.a + ( 10 * b.a ) + ( 100 * c.a ) ) DAY AS Date 
+		FROM
+			(
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS a
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS b
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS c 
+		) a 
+	WHERE
+		MONTH ( a.Date ) = monthh 
+		AND YEAR ( a.Date ) = yearr 
+	ORDER BY
+		Date;
+		
+		SELECT dt.date , sd.haft_day
+		FROM date_temp dt
+		INNER JOIN setting_date sd ON (dt.Date BETWEEN sd.`from` AND sd.`to`)
+		WHERE sd.off_date = 1;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for PR_my_check_in
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `PR_my_check_in`;
+delimiter ;;
+CREATE PROCEDURE `PR_my_check_in`(IN `staff_id` INT, IN `monthh` INT, IN `yearr` INT)
+BEGIN
+	DROP TEMPORARY TABLE
+	IF
+		EXISTS date_temp;
+	CREATE TEMPORARY TABLE date_temp SELECT
+	a.Date 
+	FROM
+		(
+		SELECT
+			CONCAT(yearr,'-',monthh,'-',31) - INTERVAL ( a.a + ( 10 * b.a ) + ( 100 * c.a ) ) DAY AS Date 
+		FROM
+			(
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS a
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS b
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS c 
+		) a 
+	WHERE
+		MONTH ( a.Date ) = monthh 
+		AND YEAR ( a.Date ) = yearr 
+	ORDER BY
+		Date;-- SELECT * FROM tmp_my_check_in;
+	
+	SET @begin_time = 0;
+	
+	SET @end_time = 0;
+	DROP TEMPORARY TABLE
+	IF
+		EXISTS tmp_my_check_in;
+	CREATE TEMPORARY TABLE tmp_my_check_in SELECT
+	lg.`day` `day`,
+	CASE
+			
+			WHEN lg.type = 2 THEN
+			NULL ELSE lg.check_at 
+		END AS `check_in_at`,
+		lgg.check_out_at,
+		lg.img1 ,
+		lg.img2,
+		NULL ngay_cong,
+		NULL `reason`,
+		NULL `note`,
+		1 `type`,
+		NULL `status` 
+	FROM
+		time_gps lg
+		LEFT JOIN (
+		SELECT
+			lg2.`day` `date`,
+			lg2.check_at `check_out_at`,
+			lg2.type 
+		FROM
+			time_gps lg2 
+		WHERE
+			lg2.staff_id = staff_id 
+			AND lg2.type = 2 
+		) lgg ON lgg.date = lg.`day` 
+	WHERE
+		lg.staff_id = staff_id 
+	AND
+	IF
+		( lg.type = 1, lg.type = 1, lg.type = 2 ) 
+		AND ( MONTH ( lg.`day` ) = monthh AND YEAR ( lg.`day` ) = yearr )
+	GROUP BY lg.`day`
+		
+	UNION ALL
+	SELECT
+		dt.date `day`,
+		NULL check_in_at,
+		NULL check_out_at,
+		NULL img1,
+		NULL img2,
+	CASE
+			
+			WHEN ld.type = 1 
+			AND ld.`status` = 1 AND sd.id IS NULL THEN
+				1 
+				WHEN ld.type = 2 
+				AND ld.`status` = 1 AND sd.id IS NULL THEN
+					0.5 
+					ELSE 0
+					END AS `ngay_cong`,
+				ld.reason `reason`,
+			CASE
+					
+					WHEN ld.`status` = 2 THEN
+					'Chờ xác nhận' ELSE '' 
+				END AS `note`,
+				2 `type`,
+				ld.`status` 
+			FROM
+				date_temp dt
+				INNER JOIN leave_detail ld ON dt.Date BETWEEN ld.from_date 
+				AND ld.to_date 
+				LEFT JOIN setting_date sd ON dt.date BETWEEN  sd.`from` AND sd.`to`
+			WHERE
+				ld.staff_id = staff_id
+				AND ld.del = 0
+				
+			UNION ALL
+				
+			SELECT
+				DATE( stm.created_at ) `day`,
+				NULL check_in_at, NULL check_out_at,
+				NULL img1,
+				NULL img2,
+				COUNT(stm.count_day) `ngay_cong`,
+				stm.add_reason `reason`,
+				CASE
+					WHEN stm.`status` = 2 THEN
+					'Chờ xác nhận' ELSE '' 
+				END AS `note`,
+				3 `type`,
+				stm.`status`
+			FROM
+				staff_temp stm 
+			WHERE
+				stm.staff_id = staff_id
+			GROUP BY `day`
+				
+				UNION ALL
+				
+				SELECT
+				tll.date `day` , 
+				NULL check_in_at, NULL check_out_at,
+				NULL img1,
+				NULL img2,
+				NULL `ngay_cong`,
+				tll.add_reason `reason`,
+				CASE
+					WHEN tll.`status` = 2 THEN
+					'Chờ xác nhận' ELSE '' 
+				END AS `note`,
+				4 `type`,
+				tll.`status`
+				FROM time_late tll
+				WHERE tll.staff_id = staff_id;
+				
+			SELECT
+				* 
+			FROM
+				tmp_my_check_in
+				ORDER BY `day`;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for tesst
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `tesst`;
+delimiter ;;
+CREATE PROCEDURE `tesst`(IN `staff_id` INT, IN `monthh` INT, IN `yearr` INT)
+BEGIN
+	#Routine body goes here...
+DROP TEMPORARY TABLE
+	IF
+		EXISTS date_temp;
+	CREATE TEMPORARY TABLE date_temp SELECT
+	a.Date 
+	FROM
+		(
+		SELECT
+			CONCAT(yearr,'-',monthh,'-',31) - INTERVAL ( a.a + ( 10 * b.a ) + ( 100 * c.a ) ) DAY AS Date 
+		FROM
+			(
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS a
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS b
+			CROSS JOIN (
+			SELECT
+				0 AS a UNION ALL
+			SELECT
+				1 UNION ALL
+			SELECT
+				2 UNION ALL
+			SELECT
+				3 UNION ALL
+			SELECT
+				4 UNION ALL
+			SELECT
+				5 UNION ALL
+			SELECT
+				6 UNION ALL
+			SELECT
+				7 UNION ALL
+			SELECT
+				8 UNION ALL
+			SELECT
+				9 
+			) AS c 
+		) a 
+	WHERE
+		MONTH ( a.Date ) = monthh 
+		AND YEAR ( a.Date ) = yearr 
+	ORDER BY
+		Date;-- SELECT * FROM tmp_my_check_in;
+		
+		SELECT
+		ld.staff_id
+			FROM
+				date_temp dt
+				INNER JOIN leave_detail ld ON dt.Date BETWEEN ld.from_date 
+				AND ld.to_date 
+				LEFT JOIN setting_date sd ON dt.date BETWEEN  sd.`from` AND sd.`to`
+			WHERE
+				ld.staff_id = 1
+				 AND ld.del = 0;
+END
+;;
+delimiter ;
 
 -- ----------------------------
 -- Event structure for check_leave_approve
