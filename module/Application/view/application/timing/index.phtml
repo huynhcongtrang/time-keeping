@@ -1,4 +1,24 @@
-<?php
+<style>
+.dropdown-a {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu-a {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown-a:hover .dropdown-menu-a {
+  display: block;
+}
+</style>
+ <?php
 function isWeekend($date) {
     $weekDay = date('w', strtotime($date));
     return ($weekDay == 0);
@@ -25,12 +45,12 @@ function getTotalHours(DateInterval $int){
                         <p class="card-category">PHP Dev</p>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form method="post">
                             <div class="row">
                                 <div class="col-md-10">
                                     <div class="form-group">
                                         <label class="bmd-label-floating">Month</label>
-                                        <input type="text" class="form-control date" value="03/2020">
+                                        <input type="text" class="form-control datepickermy" name="date" value="<?php echo (isset($this->date_temp))?($this->date_temp[1].'-'.$this->date_temp[0]):''?>">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -129,7 +149,9 @@ function getTotalHours(DateInterval $int){
                                     }else if(in_array($item['Date'], $this->day_all_advance) && $this->day_advance[$item['Date']] != 0){
                                         echo 'class="background-break" title="Hôm nay được nghĩ nữa ngày"';
                                     }?>>
-                                        <?php 
+                                        <?php  
+                                            $check_late = 0;
+                                            $check_temp = 0;
                                             $check_in_at = '' ;
                                             $check_out_at = '' ;
                                             $count_work = '' ;
@@ -139,7 +161,9 @@ function getTotalHours(DateInterval $int){
                                             $img_temp2 = '';
                                             $action = array();//1,2,3: bosungcong,dangkiphep,xacnhantresom
                                         ?>
-                                        <?php if(isset($this->detail_timing[$item['Date']])){
+                                        <?php
+                                        
+                                        if(isset($this->detail_timing[$item['Date']])){
                                             $find = findKeyValue('type', 1, $this->detail_timing[$item['Date']]);
                                             if(!empty($find)){
                                                 
@@ -166,6 +190,7 @@ function getTotalHours(DateInterval $int){
                                                         $type_check_in = 2;
                                                         $check_in_temp = $this->shift_stafff['begin'];
                                                     }else {
+                                                        $check_late = 1;
                                                         $type_check_in = 3;
                                                         $check_in_temp = $check_in_at;
                                                     }
@@ -178,6 +203,7 @@ function getTotalHours(DateInterval $int){
                                                         $type_check_out = 2;
                                                         $check_out_temp = $this->shift_stafff['end'];
                                                     }else {
+                                                        $check_late = 1;
                                                         $type_check_out = 3;
                                                         $check_out_temp = $check_out_at;
                                                     }
@@ -189,6 +215,7 @@ function getTotalHours(DateInterval $int){
                                                         if($count_time >= 6){
                                                             $count_work = '1 ngày công ';
                                                         }else if($count_time >= 3){
+                                                            $check_temp = 1;
                                                             $count_work = '0.5 ngày công';
                                                         }
                                                     }else {
@@ -197,9 +224,12 @@ function getTotalHours(DateInterval $int){
                                                         if($count_time >= 6){
                                                             $count_work = '1 ngày công ';
                                                         }else if($count_time >= 3){
+                                                            $check_temp = 1;
                                                             $count_work = '0.5 ngày công';
                                                         }
                                                     }
+                                                }else {
+                                                    $check_temp = 1;
                                                 }
                                                 $find_late = findKeyValue('type', 4, $this->detail_timing[$item['Date']]);
                                                 if(!empty($find_late)){
@@ -211,18 +241,25 @@ function getTotalHours(DateInterval $int){
                                                 $find_leave = findKeyValue('type',2, $this->detail_timing[$item['Date']]);
                                                 if(!empty($find_leave) && $find_leave['ngay_cong']!=0){
                                                     $count_work = $find_leave['ngay_cong'].' ngày phép';
+                                                    if($find_leave['ngay_cong'] == 0.5){
+                                                        $check_temp = 1;
+                                                    }
                                                     $reason = $find_leave['reason'];
                                                     $note = $find_leave['note'];
                                             }else {
                                                     $find_temp = findKeyValue('type',3, $this->detail_timing[$item['Date']]);
                                                     if(!empty($find_temp) && $find_temp['ngay_cong']!=0){
                                                         $count_work = 'Bổ sung '.$find_temp['ngay_cong'].' ngày';
+                                                        if($find_temp['ngay_cong'] == 0.5){
+                                                            $check_temp = 1;
+                                                        }
                                                         $reason = $find_temp['reason'];
                                                         $note = $find_temp['note'];
                                                     }
                                                 }
                                             }
-                                            
+                                        }else {
+                                            $check_temp = 1;
                                         }?>
                                         <td>
                                             <?php echo date_format(date_create($item['Date']), 'l, d-m-Y')?>
@@ -243,18 +280,22 @@ function getTotalHours(DateInterval $int){
                                             <?php echo $note?>
                                         </td>
                                         <td>
-                                            <div class="dropdown show">
-                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Action
-                                                </a>
-
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <a class="dropdown-item" href="#">Bổ sung công</a>
-                                                    <a class="dropdown-item" href="#">Đăng kí phép</a>
-                                                    <a class="dropdown-item" href="#">Xác nhận đi trể/về sớm</a>
-                                                </div>
-                                            </div>
-                                        </td>
+                                            <div class="dropdown-a">    
+                                                    <a class="btn btn-secondary " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Action
+                                                        
+                                                    </a>
+                                                    <div class="ripple-container"></div>
+                                                    <div class="dropdown-menu-a" aria-labelledby="dropdownMenuLink" x-placement="top-start">
+                                                        <?php if($check_temp == 1):?>
+                                                        <a class="dropdown-item modal-show-add-bt btn-hover">Bổ sung công</a>
+                                                        <?php endif;?>
+                                                        <?php if($check_late == 1):?>
+                                                        <a class="dropdown-item modal-show-late-bt btn-hover">Đăng kí đi trể về sớm</a>
+                                                        <?php endif;?>
+                                                    </div>
+                                            </div> 
+                                         </td>
                                     </tr>
                                     <?php endforeach;?>
                                 </tbody>
@@ -263,7 +304,185 @@ function getTotalHours(DateInterval $int){
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div id="modal-show-add" class="modal-show1">
+            <div class="modal-content-show2 animate-show">
+                <div class="imgcontainer-close">
+                    <span onclick="document.getElementById('modal-show-add').style.display = 'none'" class="close-show"
+                          title="Close Modal">&times;</span>
+                </div>
 
+                <div class="container-show">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" id="trang" href="javascript:;">Bổ sung công</a><br>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Ngày yêu cầu : </label>
+                                    <span><?php echo date('m-d-Y')?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Lý do bổ sung công</label>
+                                    <select class="form-control" id="reason-add" name="reason-add" required="required">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating bold">Mô tả chi tiết</label>
+                                    <span id="decript-add"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Lý do chi tiết : </label>
+                                    <textarea class="form-control" id="reson_leave" name="reason_leave" rows="5" placeholder="What's on your reason ?" required="required"> </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div id="modal-show-late" class="modal-show1">
+            <div class="modal-content-show2 animate-show">
+                <div class="imgcontainer-close">
+                    <span onclick="document.getElementById('modal-show-late').style.display = 'none'" class="close-show"
+                          title="Close Modal">&times;</span>
+                </div>
+
+                <div class="container-show">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" id="trang" href="javascript:;">Đăng kí đi trể về sớm</a><br>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Ngày yêu cầu : </label>
+                                    <span><?php echo date('m-d-Y')?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Loại đăng kí : </label>
+                                    <select class="form-control" id="type-late" name="reason-add" required="required">
+                                        <option value="">----</option>
+                                        <option value="1">Đi trể</option>
+                                        <option value="2">Về sớm</option>
+                                        <option value="3">Đi trể và về sớm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Lý do đăng ký : </label>
+                                    <select class="form-control" id="reason-late" name="reason-add" required="required">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating" >Lý do chi tiết : </label>
+                                    <textarea class="form-control" id="reson_late_note" name="reson_late_note" rows="5" placeholder="What's on your reason ?" required="required"> </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.modal-show-add-bt').click(function () {
+            $.ajax({
+                method: "POST",
+                url: "/timing/get-reason-temp",
+                data: {
+                    
+                }
+            }).done(function (data) {
+                var data_main = jQuery.parseJSON(data);
+                console.log(data_main);
+                $('#reason-add').empty();
+                $('#reason-add').append('<option value="">----</option>');
+                $.each(data_main, function (index, value) {
+                    $("#reason-add").append("<option value = '"+value.id+"'>"+value.name+"</option>");
+                });
+                document.getElementById('modal-show-add').style.display = 'block';
+            });
+            
+        });
+        
+        $('.modal-show-late-bt').click(function () {
+            document.getElementById('modal-show-late').style.display = 'block';
+        });
+        $('#reason-add').change(function(){
+            var id = $('#reason-add').val();
+            if(id.length > 0){
+                $.ajax({
+                    method: "POST",
+                    url: "/timing/get-reason-temp",
+                    data: {
+                        id : id
+                    }
+                }).done(function (data) {
+                    var data_main = jQuery.parseJSON(data);
+                    console.log(data_main);
+                    $('#decript-add').empty();
+                    $('#decript-add').append(data_main.decription);
+                });
+            }else {
+                $('#decript-add').empty();
+            }
+            
+        });
+        
+        $('#type-late').change(function(){
+            var type_late = $('#type-late').val();
+            if(type_late.length > 0){
+                $.ajax({
+                    method: "POST",
+                    url: "/timing/get-reason-late",
+                    data: {
+                    }
+                }).done(function (data) {
+                    var data_main = jQuery.parseJSON(data);
+                    console.log(data_main);
+                    $('#reason-late').empty();
+                    $('#reason-late').append('<option value="">----</option>');
+                    $.each(data_main, function (index, value) {
+                        $("#reason-late").append("<option value = '"+value.id+"'>"+value.name+"</option>");
+                    });
+                });
+            }else {
+                $('#reason-late').empty();
+            }
+        });
+    });
+</script>

@@ -56,5 +56,39 @@ class Timing{
         ));
         return $result->current();
     }
+    
+    public function getReasonTemp($id = null){
+        if(empty($id)){
+            $db = new \Database\Controller\AdapterController();
+            $adapter = $db->DbAdapter();
+            $sql = "SELECT * FROM reason_staff_temp";
+            $statement = $adapter->createStatement($sql);
+            $statement->prepare();
+            $result = $statement->execute();
+            return $db->fetch_array($result);
+        }else {
+           $db = new \Database\Controller\AdapterController();
+            $adapter = $db->DbAdapter();
+            $sql = "SELECT * FROM reason_staff_temp where id = ?";
+            $statement = $adapter->createStatement($sql);
+            $statement->prepare();
+            $result = $statement->execute([
+                'id' => $id
+            ]); 
+            
+            return $result->current();
+        }
+        
+    }
+    
+    public function getReasonLate(){
+            $db = new \Database\Controller\AdapterController();
+            $adapter = $db->DbAdapter();
+            $sql = "SELECT * FROM reason_time_late";
+            $statement = $adapter->createStatement($sql);
+            $statement->prepare();
+            $result = $statement->execute();
+            return $db->fetch_array($result);
+    }
             
 }
