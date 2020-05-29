@@ -11,7 +11,7 @@
  Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 29/05/2020 09:33:17
+ Date: 29/05/2020 11:15:44
 */
 
 SET NAMES utf8mb4;
@@ -66,7 +66,7 @@ CREATE TABLE `leave_detail`  (
   `count_day` decimal(11, 1) NOT NULL COMMENT 'Số ngày nghĩ : vì khi đăng kí nghĩ có ngay lể sẽ trừ ra',
   `del` tinyint(3) NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of leave_detail
@@ -78,6 +78,8 @@ INSERT INTO `leave_detail` VALUES (26, 1, '2020-05-18', '2020-05-19', 1, 23, 'te
 INSERT INTO `leave_detail` VALUES (27, 3, '2020-05-21', '2020-05-22', 1, 23, 'test', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:21:59', 2.0, 0);
 INSERT INTO `leave_detail` VALUES (28, 3, '2020-05-29', '2020-05-31', 1, 23, 'eaaa', 2, NULL, NULL, NULL, NULL, '2020-05-20 00:22:13', 2.0, 0);
 INSERT INTO `leave_detail` VALUES (29, 1, '2020-05-13', '2020-05-14', 1, 4, 'Con kết hôn nên Xin nghĩ', 1, NULL, NULL, NULL, NULL, '2020-05-28 22:15:49', 2.0, 0);
+INSERT INTO `leave_detail` VALUES (30, 3, '2020-06-01', '2020-06-02', 1, 4, 'trang dk phep', 0, NULL, NULL, NULL, NULL, '2020-05-29 11:07:43', 2.0, 0);
+INSERT INTO `leave_detail` VALUES (31, 3, '2020-06-05', '2020-06-07', 1, 23, 'trang dk p', 2, NULL, NULL, NULL, NULL, '2020-05-29 11:08:30', 2.0, 0);
 
 -- ----------------------------
 -- Table structure for leave_time
@@ -211,12 +213,13 @@ CREATE TABLE `reason_reject_leave`  (
   `create_by` int(11) NOT NULL,
   `create_at` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reason_reject_leave
 -- ----------------------------
 INSERT INTO `reason_reject_leave` VALUES (7, 22, 1, 'sai roi', 4, '2020-05-16 10:59:27');
+INSERT INTO `reason_reject_leave` VALUES (8, 30, 1, 'trang tu choi', 4, '2020-05-29 11:10:13');
 
 -- ----------------------------
 -- Table structure for reason_staff_temp
@@ -401,12 +404,17 @@ CREATE TABLE `staff_temp`  (
   `created_at` datetime(0) NOT NULL,
   `count_day` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of staff_temp
 -- ----------------------------
 INSERT INTO `staff_temp` VALUES (1, 1, 1, 1, 6, 'He thong loi', '2020-05-06 22:44:13', 1);
+INSERT INTO `staff_temp` VALUES (2, 1, 1, 1, 6, 'He thong loi', '2020-04-06 22:44:13', 1);
+INSERT INTO `staff_temp` VALUES (3, 1, 1, 1, 6, 'He thong loi', '2020-03-06 22:44:13', 1);
+INSERT INTO `staff_temp` VALUES (4, 1, 1, 1, 6, 'He thong loi', '2020-02-06 22:44:13', 1);
+INSERT INTO `staff_temp` VALUES (5, 1, 1, 1, 6, 'He thong loi', '2020-02-07 22:44:13', 1);
+INSERT INTO `staff_temp` VALUES (6, 1, 1, 1, 6, 'He thong loi', '2020-01-07 22:44:13', 1);
 
 -- ----------------------------
 -- Table structure for team
@@ -445,7 +453,7 @@ CREATE TABLE `time_gps`  (
   `img2` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `type` tinyint(3) NOT NULL COMMENT '1 : check in 2: check out',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of time_gps
@@ -455,6 +463,10 @@ INSERT INTO `time_gps` VALUES (11, 1, '2020-05-20', '17:22:00', '109.15325199999
 INSERT INTO `time_gps` VALUES (14, 1, '2020-05-27', '11:27:00', '106.716331713232', '10.82954766590579', 'image_1_1_1590596866.png', 'image_2_1_1590596866.png', 1);
 INSERT INTO `time_gps` VALUES (18, 1, '2020-05-28', '12:20:00', '106.71619216426231', '10.828836424532948', 'image_1_1_1590676703.png', 'image_2_1_1590676703.png', 1);
 INSERT INTO `time_gps` VALUES (19, 1, '2020-05-28', '16:38:00', '106.71619216426231', '10.828836424532948', 'image_1_1_1590676729.png', 'image_2_1_1590676729.png', 2);
+INSERT INTO `time_gps` VALUES (20, 1, '2020-04-20', '08:10:00', '109.153252', '12.049567', 'image_1_1_1587396062.png', 'image_2_1_1587396062.png', 1);
+INSERT INTO `time_gps` VALUES (21, 1, '2020-04-20', '17:22:00', '109.15325199999998', '12.049567', 'image_1_1_1587396108.png', 'image_2_1_1587396108.png', 2);
+INSERT INTO `time_gps` VALUES (22, 1, '2020-03-20', '08:10:00', '109.153252', '12.049567', 'image_1_1_1587396062.png', 'image_2_1_1587396062.png', 1);
+INSERT INTO `time_gps` VALUES (23, 1, '2020-03-20', '17:22:00', '109.15325199999998', '12.049567', 'image_1_1_1587396108.png', 'image_2_1_1587396108.png', 2);
 
 -- ----------------------------
 -- Table structure for time_late
@@ -476,6 +488,8 @@ CREATE TABLE `time_late`  (
 -- Records of time_late
 -- ----------------------------
 INSERT INTO `time_late` VALUES (1, 1, '2020-05-20', 2, 1, 'Đi trể r', 1, '2020-05-28 21:18:15');
+INSERT INTO `time_late` VALUES (2, 1, '2020-04-20', 2, 1, 'Đi trể r', 1, '2020-04-20 10:14:35');
+INSERT INTO `time_late` VALUES (3, 1, '2020-03-20', 2, 1, 'Đi trể r', 1, '2020-03-20 10:14:35');
 
 -- ----------------------------
 -- Table structure for type_shift
