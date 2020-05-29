@@ -116,5 +116,5 @@ class UserController extends My_Controller {
         $auth->clearIdentity();
         $this->redirect()->toRoute('user', array('controller' => 'user', 'action' => 'login'));
     }
-
+    
 }
