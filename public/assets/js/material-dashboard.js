@@ -312,10 +312,22 @@ md = {
     if ($('#dailySalesChart').length != 0 || $('#completedTasksChart').length != 0 || $('#websiteViewsChart').length != 0) {
       /* ----------==========     Daily Sales Chart initialization    ==========---------- */
 
-      dataDailySalesChart = {
-        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      var leaveTotal = jQuery.parseJSON($('#leaveTotalChart').text());
+
+      var labelsArr = [];
+      $.each(leaveTotal, function(i, item) {
+        labelsArr.push(item.month);
+      });
+
+      var seriesArr = [];
+      $.each(leaveTotal, function(i, item) {
+        seriesArr.push(item.count);
+      });
+
+        dataDailySalesChart = {
+        labels: labelsArr,
         series: [
-          [12, 17, 7, 17, 23, 18, 38]
+          seriesArr
         ]
       };
 
@@ -340,11 +352,22 @@ md = {
 
 
       /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+      var staffTempTotal = jQuery.parseJSON($('#staffTempTotalChart').text());
+
+      var labelsArr = [];
+      $.each(staffTempTotal, function(i, item) {
+        labelsArr.push(item.month);
+      });
+
+      var seriesArr = [];
+      $.each(staffTempTotal, function(i, item) {
+        seriesArr.push(item.count);
+      });
 
       dataCompletedTasksChart = {
-        labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
+        labels: labelsArr,
         series: [
-          [230, 750, 450, 300, 280, 240, 200, 190]
+          seriesArr
         ]
       };
 
@@ -353,7 +376,7 @@ md = {
           tension: 0
         }),
         low: 0,
-        high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
         chartPadding: {
           top: 0,
           right: 0,
@@ -369,11 +392,22 @@ md = {
 
 
       /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+      var timeLateTotal = jQuery.parseJSON($('#timeLateTotalChart').text());
+
+      var labelsArr = [];
+      $.each(timeLateTotal, function(i, item) {
+        labelsArr.push(item.month);
+      });
+
+      var seriesArr = [];
+      $.each(timeLateTotal, function(i, item) {
+        seriesArr.push(item.count);
+      });
 
       var dataWebsiteViewsChart = {
-        labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+        labels: labelsArr,
         series: [
-          [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+          seriesArr
 
         ]
       };
@@ -382,7 +416,7 @@ md = {
           showGrid: false
         },
         low: 0,
-        high: 1000,
+        high: 50,
         chartPadding: {
           top: 0,
           right: 5,
