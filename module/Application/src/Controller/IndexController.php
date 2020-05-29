@@ -28,6 +28,13 @@ class IndexController extends My_Controller {
 
     public function indexAction() 
     {
+        
+        $auth = new AuthenticationService();
+        if ($auth->hasIdentity() != 1) {
+            header('Location: ' . HOST . 'user/login');
+            exit();
+        }
+        
         $leaveTotalCurrentMonth = $this->getLeaveTotalCurrentMonth();
         $timeLateTotalCurrentMonth = $this->getTimeLateTotalCurrentMonth();
         $staffTempTotalCurrentMonth = $this->getStaffTempTotalCurrentMonth();

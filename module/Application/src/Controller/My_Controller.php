@@ -27,7 +27,6 @@ class My_Controller extends AbstractActionController {
     public $cache = null;
 
     public function __construct() {
-
         $auth = new AuthenticationService();
         if ($auth->hasIdentity() == 1 && $_SERVER['REQUEST_URI'] == '/user/login') {
             header('Location: ' . HOST);

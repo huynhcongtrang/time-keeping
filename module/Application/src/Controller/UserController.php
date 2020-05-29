@@ -111,7 +111,6 @@ class UserController extends My_Controller {
         $auth = new AuthenticationService();
         if ($auth->hasIdentity()) {
             $identity = $auth->getIdentity();
-            ;
         }
         $auth->clearIdentity();
         $this->redirect()->toRoute('user', array('controller' => 'user', 'action' => 'login'));
